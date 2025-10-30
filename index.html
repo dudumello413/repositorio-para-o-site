@@ -90,15 +90,13 @@
             border: 1px solid #ddd;
             border-top: none;
         }
-        /* --- NOVO: Estilo especial para o botão de Verificadas --- */
         .accordion-button.verified {
-            background-color: #d4edda; /* Verde claro */
-            color: #155724; /* Verde escuro */
+            background-color: #d4edda;
+            color: #155724;
         }
         .accordion-button.verified:hover, .accordion-button.verified.active {
             background-color: #c3e6cb;
         }
-        /* --- FIM DA ATUALIZAÇÃO --- */
 
         /* Estilos do Consumo e Share */
         #wattage-report { margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ccc; }
@@ -107,6 +105,26 @@
         #share-url { flex-grow: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
         #copy-button { padding: 8px 15px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; }
         #copy-button:hover { background-color: #5a6268; }
+
+        /* --- NOVO: ESTILOS DA PÁGINA FUTURO DO SITE (ROADMAP) --- */
+        #page-roadmap ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        #page-roadmap li {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        #page-roadmap li strong {
+            color: #007bff;
+            display: block; /* Faz o título ficar numa linha própria */
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+        /* --- FIM DOS NOVOS ESTILOS --- */
         
     </style>
 </head>
@@ -117,7 +135,7 @@
         <button id="nav-builder">Montar PC</button>
         <button id="nav-prebuilts">Montagens</button>
         <button id="nav-shops">Assistências</button>
-    </nav>
+        <button id="nav-roadmap">Futuro do Site</button> </nav>
 
     <main>
         <section id="page-home" class="page-section">
@@ -127,7 +145,7 @@
                 <li><strong>Montar PC:</strong> Verifique a compatibilidade e gargalos da sua futura máquina.</li>
                 <li><strong>Montagens:</strong> Veja nossas builds recomendadas.</li>
                 <li><strong>Assistências:</strong> Encontre uma assistência técnica para PCs ou Celulares.</li>
-            </ul>
+                <li><strong>Futuro do Site:</strong> Veja as funcionalidades que estamos a planear!</li> </ul>
         </section>
 
         <section id="page-builder" class="page-section">
@@ -173,7 +191,6 @@
         <section id="page-shops" class="page-section">
             <h2>Encontrar Assistência Técnica</h2>
             <p>Clique numa categoria para expandir a lista.</p>
-
             <button type="button" class="accordion-button verified">⭐ Assistências Verificadas (Recomendado)</button>
             <div class="accordion-panel">
                 <div id="verified-shops-list" class="shop-list">
@@ -186,7 +203,6 @@
                     <p>Carregando...</p> 
                 </div>
             </div>
-
             <button type="button" class="accordion-button">Assistências de Celular (Todas)</button>
             <div class="accordion-panel">
                 <div id="celular-shops-list" class="shop-list">
@@ -194,18 +210,48 @@
                 </div>
             </div>
         </section>
+
+        <section id="page-roadmap" class="page-section">
+            <h2>O Futuro do Site</h2>
+            <p>O nosso MVP (Produto Mínimo Viável) está completo, mas temos grandes planos! Aqui estão as próximas funcionalidades que estamos a planear para construir um site ainda mais robusto e baseado na comunidade:</p>
+            
+            <ul id="roadmap-list">
+                <li>
+                    <strong>Nível 1: Avaliações do Especialista</strong>
+                    (A ideia que discutimos!) Adicionar uma classificação de estrelas (⭐) e uma justificação do porquê confiamos nas "Assistências Verificadas".
+                </li>
+                <li>
+                    <strong>Nível 2: Sistema de Avaliação dos Utilizadores</strong>
+                    Permitir que *vocês* (os utilizadores) deixem uma avaliação em estrelas e um comentário em cada assistência. Isto vai criar uma média de confiança baseada na experiência de todos.
+                </li>
+                <li>
+                    <strong>Nível 3: Busca de Assistências por Proximidade (API do Google)</strong>
+                    Substituir as nossas listas estáticas por uma barra de pesquisa (por CEP ou morada) para encontrar as lojas mais próximas de si, usando a tecnologia do Google Maps.
+                </li>
+                <li>
+                    <strong>Nível 4: Ferramenta de Comparação de Peças</strong>
+                    Uma nova página onde poderá selecionar duas ou mais peças (como duas GPUs ou duas CPUs) e ver as especificações delas lado a lado para ajudar a decidir qual a melhor.
+                </li>
+                <li>
+                    <strong>Nível 5: Assistente de Montagem (Build Wizard)</strong>
+                    Uma ferramenta para iniciantes onde apenas precisa de dizer o seu orçamento (ex: R$ 3000) e o seu objetivo (ex: "Jogos" ou "Estudo"), e o site recomendará uma configuration completa e compatível.
+                </li>
+            </ul>
+        </section>
         </main>
 
 
     <script>
-        const API_BASE_URL = '';
+        const API_BASE_URL = ''; // Caminho relativo para funcionar no Render
         const loadedPartsData = {};
 
-        // Lógica de Navegação
+        // --- ATUALIZADO: Lógica de Navegação ---
         const navHome = document.getElementById('nav-home');
         const navBuilder = document.getElementById('nav-builder');
         const navPrebuilts = document.getElementById('nav-prebuilts');
         const navShops = document.getElementById('nav-shops');
+        const navRoadmap = document.getElementById('nav-roadmap'); // NOVO
+        
         const allPages = document.querySelectorAll('.page-section');
         function showPage(pageId) {
             allPages.forEach(page => { page.style.display = 'none'; });
@@ -217,6 +263,8 @@
         navBuilder.addEventListener('click', () => showPage('page-builder'));
         navPrebuilts.addEventListener('click', () => showPage('page-prebuilts'));
         navShops.addEventListener('click', () => showPage('page-shops'));
+        navRoadmap.addEventListener('click', () => showPage('page-roadmap')); // NOVO
+        // --- FIM DA ATUALIZAÇÃO ---
 
         // Lógica de Carregamento Inicial
         document.addEventListener('DOMContentLoaded', async () => {
@@ -246,14 +294,12 @@
                     populateShopList('/api/get-pc-shops', 'pc-shops-list'),
                     populateShopList('/api/get-celular-shops', 'celular-shops-list'),
                     populatePrebuiltList('/api/get-prebuilts', 'prebuilts-list'),
-                    
-                    // --- NOVO: Carregar a nova lista ---
                     populateShopList('/api/get-verified-shops', 'verified-shops-list')
                 ]);
 
                 setupAccordion();
                 
-                // Pré-seleciona itens da URL
+                // Pré-seleciona itens da URL (lógica sem mudanças)
                 partTypes.forEach(type => {
                     const initialId = initialValues[`${type}_id`];
                     const hiddenInputId = `${type}_id`;
@@ -286,7 +332,6 @@
                 shops.forEach(shop => {
                     const shopCard = document.createElement('div');
                     shopCard.className = 'shop-card';
-                    // --- NOVO: Adiciona o tipo (PC/Celular) ao card ---
                     const shopType = shop.type === 'pc' ? 'PC' : 'Celular';
                     shopCard.innerHTML = `<h4>${shop.name} <span style="font-size: 12px; color: #6c757d;">(${shopType})</span></h4><p><strong>Endereço:</strong> ${shop.address}</p><p><strong>Telefone:</strong> ${shop.phone}</p>`;
                     listElement.appendChild(shopCard);
