@@ -1,6 +1,6 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-import math # Para arredondamento
+import math
 
 app = Flask(__name__)
 CORS(app) 
@@ -318,7 +318,15 @@ def calculate_wattage():
     return jsonify(response)
 
 # -------------------------------------------------------------------
-# 6. RODA O SERVIDOR
+# 6. ROTA PARA SERVIR O FRONTEND (index.html)
+# -------------------------------------------------------------------
+@app.route('/')
+def serve_index():
+    # Envia o index.html que está na mesma pasta
+    return send_from_directory('.', 'index.html')
+
+# -------------------------------------------------------------------
+# 7. RODA O SERVIDOR (Isto só é usado localmente)
 # -------------------------------------------------------------------
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
