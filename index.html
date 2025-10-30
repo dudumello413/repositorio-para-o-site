@@ -34,6 +34,21 @@
         .shop-card h4 { margin: 0 0 10px 0; color: #007bff; }
         .shop-card p { margin: 5px 0; }
         
+        /* --- NOVO: Estilos para Estrelas e Avaliação --- */
+        .shop-card h4 .stars {
+            color: #f0ad4e; /* Cor de estrela (laranja/amarelo) */
+            font-size: 14px;
+            margin-left: 8px;
+        }
+        .shop-review {
+            font-style: italic;
+            color: #555;
+            margin-top: 10px !important;
+            padding-top: 10px;
+            border-top: 1px dashed #ccc;
+        }
+        /* --- FIM DA ATUALIZAÇÃO --- */
+
         /* Estilos da Página de Montagens Prontas */
         .prebuilt-list { display: grid; grid-template-columns: 1fr; gap: 15px; }
         .prebuilt-card { border: 1px solid #17a2b8; padding: 15px; border-radius: 5px; background-color: #f8f9fa; }
@@ -106,25 +121,10 @@
         #copy-button { padding: 8px 15px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; }
         #copy-button:hover { background-color: #5a6268; }
 
-        /* --- NOVO: ESTILOS DA PÁGINA FUTURO DO SITE (ROADMAP) --- */
-        #page-roadmap ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        #page-roadmap li {
-            background-color: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 10px;
-        }
-        #page-roadmap li strong {
-            color: #007bff;
-            display: block; /* Faz o título ficar numa linha própria */
-            font-size: 1.1em;
-            margin-bottom: 5px;
-        }
-        /* --- FIM DOS NOVOS ESTILOS --- */
+        /* Estilos da Página "Futuro do Site" */
+        #page-roadmap ul { list-style-type: none; padding-left: 0; }
+        #page-roadmap li { background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 10px; }
+        #page-roadmap li strong { color: #007bff; display: block; font-size: 1.1em; margin-bottom: 5px; }
         
     </style>
 </head>
@@ -135,7 +135,8 @@
         <button id="nav-builder">Montar PC</button>
         <button id="nav-prebuilts">Montagens</button>
         <button id="nav-shops">Assistências</button>
-        <button id="nav-roadmap">Futuro do Site</button> </nav>
+        <button id="nav-roadmap">Futuro do Site</button>
+    </nav>
 
     <main>
         <section id="page-home" class="page-section">
@@ -145,7 +146,8 @@
                 <li><strong>Montar PC:</strong> Verifique a compatibilidade e gargalos da sua futura máquina.</li>
                 <li><strong>Montagens:</strong> Veja nossas builds recomendadas.</li>
                 <li><strong>Assistências:</strong> Encontre uma assistência técnica para PCs ou Celulares.</li>
-                <li><strong>Futuro do Site:</strong> Veja as funcionalidades que estamos a planear!</li> </ul>
+                <li><strong>Futuro do Site:</strong> Veja as funcionalidades que estamos a planear!</li>
+            </ul>
         </section>
 
         <section id="page-builder" class="page-section">
@@ -191,18 +193,21 @@
         <section id="page-shops" class="page-section">
             <h2>Encontrar Assistência Técnica</h2>
             <p>Clique numa categoria para expandir a lista.</p>
+
             <button type="button" class="accordion-button verified">⭐ Assistências Verificadas (Recomendado)</button>
             <div class="accordion-panel">
                 <div id="verified-shops-list" class="shop-list">
                     <p>Carregando...</p> 
                 </div>
             </div>
+
             <button type="button" class="accordion-button">Assistências de PC (Todas)</button>
             <div class="accordion-panel">
                 <div id="pc-shops-list" class="shop-list">
                     <p>Carregando...</p> 
                 </div>
             </div>
+
             <button type="button" class="accordion-button">Assistências de Celular (Todas)</button>
             <div class="accordion-panel">
                 <div id="celular-shops-list" class="shop-list">
@@ -210,7 +215,7 @@
                 </div>
             </div>
         </section>
-
+        
         <section id="page-roadmap" class="page-section">
             <h2>O Futuro do Site</h2>
             <p>O nosso MVP (Produto Mínimo Viável) está completo, mas temos grandes planos! Aqui estão as próximas funcionalidades que estamos a planear para construir um site ainda mais robusto e baseado na comunidade:</p>
@@ -238,7 +243,7 @@
                 </li>
             </ul>
         </section>
-        </main>
+    </main>
 
 
     <script>
@@ -250,7 +255,7 @@
         const navBuilder = document.getElementById('nav-builder');
         const navPrebuilts = document.getElementById('nav-prebuilts');
         const navShops = document.getElementById('nav-shops');
-        const navRoadmap = document.getElementById('nav-roadmap'); // NOVO
+        const navRoadmap = document.getElementById('nav-roadmap');
         
         const allPages = document.querySelectorAll('.page-section');
         function showPage(pageId) {
@@ -263,8 +268,7 @@
         navBuilder.addEventListener('click', () => showPage('page-builder'));
         navPrebuilts.addEventListener('click', () => showPage('page-prebuilts'));
         navShops.addEventListener('click', () => showPage('page-shops'));
-        navRoadmap.addEventListener('click', () => showPage('page-roadmap')); // NOVO
-        // --- FIM DA ATUALIZAÇÃO ---
+        navRoadmap.addEventListener('click', () => showPage('page-roadmap'));
 
         // Lógica de Carregamento Inicial
         document.addEventListener('DOMContentLoaded', async () => {
@@ -299,7 +303,6 @@
 
                 setupAccordion();
                 
-                // Pré-seleciona itens da URL (lógica sem mudanças)
                 partTypes.forEach(type => {
                     const initialId = initialValues[`${type}_id`];
                     const hiddenInputId = `${type}_id`;
@@ -317,7 +320,7 @@
             } catch (error) { console.error("Erro durante o carregamento inicial:", error); }
         });
 
-        // Função populateShopList (Sem Mudanças)
+        // --- ATUALIZADO: Função populateShopList ---
         async function populateShopList(apiEndpoint, elementId) {
             const listElement = document.getElementById(elementId);
              if (!listElement) return;
@@ -332,8 +335,29 @@
                 shops.forEach(shop => {
                     const shopCard = document.createElement('div');
                     shopCard.className = 'shop-card';
+                    
                     const shopType = shop.type === 'pc' ? 'PC' : 'Celular';
-                    shopCard.innerHTML = `<h4>${shop.name} <span style="font-size: 12px; color: #6c757d;">(${shopType})</span></h4><p><strong>Endereço:</strong> ${shop.address}</p><p><strong>Telefone:</strong> ${shop.phone}</p>`;
+                    
+                    // Lógica para Estrelas
+                    let ratingHtml = '';
+                    if (shop.rating && shop.rating > 0) {
+                        let stars = '⭐'.repeat(shop.rating); // Repete o emoji
+                        ratingHtml = `<span class="stars">${stars}</span>`;
+                    }
+
+                    // Lógica para Avaliação (Review)
+                    let reviewHtml = '';
+                    if (shop.review) {
+                        reviewHtml = `<p class="shop-review"><strong>Avaliação:</strong> "${shop.review}"</p>`;
+                    }
+                    
+                    // Monta o HTML do card
+                    shopCard.innerHTML = `
+                        <h4>${shop.name} <span style="font-size: 12px; color: #6c757d;">(${shopType})</span>${ratingHtml}</h4>
+                        <p><strong>Endereço:</strong> ${shop.address}</p>
+                        <p><strong>Telefone:</strong> ${shop.phone}</p>
+                        ${reviewHtml}
+                    `;
                     listElement.appendChild(shopCard);
                 });
             } catch (error) {
@@ -341,6 +365,7 @@
                 listElement.innerHTML = '<p class="error">Erro ao carregar assistências.</p>';
             }
         }
+        // --- FIM DA ATUALIZAÇÃO ---
 
         // Função populatePrebuiltList (Sem Mudanças)
         async function populatePrebuiltList(apiEndpoint, elementId) {
