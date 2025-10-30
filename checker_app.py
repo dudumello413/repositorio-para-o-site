@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy 
-from sqlalchemy import text # --- NOVO ---
+from sqlalchemy import text # (Não vamos precisar mais disto, mas pode ficar)
 import math 
 import os 
 
@@ -41,7 +41,7 @@ class AvaliacaoUsuario(db.Model):
 # -------------------------------------------------------------------
 # 3. "BANCO DE DADOS FALSO" - (Peças e Montagens Prontas)
 # -------------------------------------------------------------------
-# (Os dicionários CPUS, MOTHERBOARDS, RAM_MODULES, GPUS, PSUS, COOLERS, CASES, PREBUILTS continuam aqui, exatamente como antes)
+# (Os dicionários CPUS, MOTHERBOARDS, RAM_MODULES, GPUS, PSUS, COOLERS, CASES, PREBUILTS continuam aqui)
 CPUS = {
     "1": { "id": "1", "name": "AMD Ryzen 5 5600X", "socket": "AM4", "ram_support_types": ["DDR4"], "tier": 7, "tdp": 65, "image_url": "static/images/amd-ryzen-5-5600x.jpg" },
     "2": { "id": "2", "name": "Intel Core i5-13600K", "socket": "LGA1700", "ram_support_types": ["DDR4", "DDR5"], "tier": 9, "tdp": 125, "image_url": "static/images/intel-i5-13600k.jpg" }
@@ -83,7 +83,7 @@ PREBUILTS = {
     "8": { "id": "8", "name": "Muito Barata (Intel)", "description": "Ponto de entrada para jogos.", "category": "Muito Barata", "parts": {"CPU": "Intel Core i3-12100F", "Placa-mãe": "Gigabyte H610M", "RAM": "Corsair Vengeance 16GB (DDR4)", "GPU": "NVIDIA GeForce GTX 1660 Super", "Fonte": "Fonte Mancer 500W", "Gabinete": "Gabinete Mancer Goblin", "Cooler": "Cooler Box Original Intel"} }
 }
 
-# --- NOVO: Dados temporários para migração ---
+# --- DADOS TEMPORÁRIOS PARA MIGRAÇÃO ---
 REPAIR_SHOPS_DATA = {
     "1001": { "id": "1001", "name": "ConsertaPC Rápido", "type": "pc", "address": "Rua Fictícia, 123 - Centro", "phone": "(21) 99999-1111", "lat": -22.9068, "lng": -43.1729 },
     "1002": { "id": "1002", "name": "SalvaCelular", "type": "celular", "address": "Av. Principal, 456 - Bairro Novo", "phone": "(21) 98888-2222", "lat": -22.9519, "lng": -43.1822 },
@@ -104,7 +104,7 @@ VERIFIED_SHOPS_DATA = {
 # -------------------------------------------------------------------
 # 4. ROTAS PARA API (APIs)
 # -------------------------------------------------------------------
-# (Rotas de peças continuam iguais)
+# (Rotas de peças)
 @app.route('/api/get-cpus', methods=['GET'])
 def get_cpus(): return jsonify(list(CPUS.values()))
 @app.route('/api/get-motherboards', methods=['GET'])
@@ -122,16 +122,16 @@ def get_cases(): return jsonify(list(CASES.values()))
 @app.route('/api/get-prebuilts', methods=['GET'])
 def get_prebuilts(): return jsonify(list(PREBUILTS.values()))
 
-# --- ROTAS DE ASSISTÊNCIA (AGORA LÊEM DA BASE DE DADOS) ---
+# (Rotas de Assistência lendo do DB)
 @app.route('/api/get-pc-shops', methods=['GET'])
 def get_pc_shops():
-    lojas = Loja.query.filter_by(type='pc', is_verified=False).all() # Só as não-verificadas
+    lojas = Loja.query.filter_by(type='pc', is_verified=False).all()
     lojas_json = [{"id": loja.id, "name": loja.name, "type": loja.type, "address": loja.address, "phone": loja.phone, "lat": loja.lat, "lng": loja.lng} for loja in lojas]
     return jsonify(lojas_json)
 
 @app.route('/api/get-celular-shops', methods=['GET'])
 def get_celular_shops():
-    lojas = Loja.query.filter_by(type='celular', is_verified=False).all() # Só as não-verificadas
+    lojas = Loja.query.filter_by(type='celular', is_verified=False).all()
     lojas_json = [{"id": loja.id, "name": loja.name, "type": loja.type, "address": loja.address, "phone": loja.phone, "lat": loja.lat, "lng": loja.lng} for loja in lojas]
     return jsonify(lojas_json)
 
@@ -149,22 +149,15 @@ def get_verified_shops():
             user_rating_count = 0
 
         lojas_json.append({
-            "id": loja.id, 
-            "name": loja.name, 
-            "type": loja.type, 
-            "address": loja.address, 
-            "phone": loja.phone, 
-            "lat": loja.lat, 
-            "lng": loja.lng,
-            "rating": loja.rating, # A tua avaliação de especialista
-            "review": loja.review, # O teu comentário
-            "user_rating_avg": user_rating_avg, # A nova média dos utilizadores
-            "user_rating_count": user_rating_count # Quantos utilizadores avaliaram
+            "id": loja.id, "name": loja.name, "type": loja.type, "address": loja.address, "phone": loja.phone, "lat": loja.lat, "lng": loja.lng,
+            "rating": loja.rating, "review": loja.review,
+            "user_rating_avg": user_rating_avg, 
+            "user_rating_count": user_rating_count 
         })
     return jsonify(lojas_json)
 
 # -------------------------------------------------------------------
-# 5. "MOTOR DE REGRAS" (API) - Sem mudanças
+# 5. "MOTOR DE REGRAS" (API)
 # -------------------------------------------------------------------
 @app.route('/api/check-build', methods=['POST'])
 def check_build():
@@ -204,7 +197,7 @@ def check_build():
     return jsonify(response)
 
 # -------------------------------------------------------------------
-# 6. ROTA PARA CALCULAR CONSUMO (API) - Sem mudanças
+# 6. ROTA PARA CALCULAR CONSUMO (API)
 # -------------------------------------------------------------------
 @app.route('/api/calculate-wattage', methods=['POST'])
 def calculate_wattage():
@@ -221,21 +214,29 @@ def calculate_wattage():
     return jsonify(response)
 
 # -------------------------------------------------------------------
-# 7. ROTA PARA SERVIR O FRONTEND (O index.html) - Sem mudanças
+# 7. ROTA PARA SERVIR O FRONTEND (O index.html)
 # -------------------------------------------------------------------
 @app.route('/')
 def serve_index():
     return render_template('index.html')
 
 # -------------------------------------------------------------------
-# --- NOVO: ROTA TEMPORÁRIA PARA POPULAR A BASE DE DADOS ---
+# --- ROTA TEMPORÁRIA PARA POPULAR A BASE DE DADOS ---
 # -------------------------------------------------------------------
 @app.route('/api/init-db')
 def init_db():
     try:
-        # Apaga todos os dados existentes para evitar duplicados
-        db.session.execute(text('TRUNCATE TABLE avaliacao_usuario RESTART IDENTITY CASCADE'))
-        db.session.execute(text('TRUNCATE TABLE loja RESTART IDENTITY CASCADE'))
+        # --- MUDANÇA AQUI ---
+        # 1. Cria as tabelas (se não existirem) PRIMEIRO
+        with app.app_context():
+            db.create_all()
+        
+        # 2. Apaga todos os dados existentes para evitar duplicados
+        # (Movemos para depois do create_all)
+        db.session.query(AvaliacaoUsuario).delete()
+        db.session.query(Loja).delete()
+        db.session.commit()
+        # --- FIM DA MUDANÇA ---
         
         # Adiciona as Lojas Verificadas
         for id_str, loja_data in VERIFIED_SHOPS_DATA.items():
@@ -263,25 +264,22 @@ def init_db():
                 phone=loja_data['phone'],
                 lat=loja_data['lat'],
                 lng=loja_data['lng'],
-                is_verified=False # A diferença é esta
+                is_verified=False 
             )
             db.session.add(nova_loja)
 
         # Guarda as alterações na base de dados
         db.session.commit()
         
-        return "Base de dados populada com sucesso! 3 lojas verificadas e 9 lojas normais adicionadas."
+        return "Base de dados CRIADA e POPULADA com sucesso! 3 lojas verificadas e 9 lojas normais adicionadas."
     
     except Exception as e:
         db.session.rollback() # Desfaz as alterações se der erro
         return f"Ocorreu um erro: {str(e)}"
-# --- FIM DA NOVA ROTA ---
-
 
 # -------------------------------------------------------------------
 # 8. RODA O SERVIDOR (Apenas para testes locais)
 # -------------------------------------------------------------------
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
+    # Removemos o db.create_all() daqui
     app.run(debug=True, port=5000)
