@@ -1,55 +1,45 @@
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy # --- NOVO ---
+from flask_sqlalchemy import SQLAlchemy 
+from sqlalchemy import text # --- NOVO ---
 import math 
-import os # --- NOVO (Para ler a variável de ambiente) ---
+import os 
 
 app = Flask(__name__, template_folder='.')
 CORS(app) 
 
 # -------------------------------------------------------------------
-# 1. CONFIGURAÇÃO DA BASE DE DADOS (NOVO)
+# 1. CONFIGURAÇÃO DA BASE DE DADOS
 # -------------------------------------------------------------------
-# Pega no link secreto da base de dados que definiste no Render
-# Se não encontrar (ex: no teu PC local), usa uma base de dados temporária chamada 'test.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///test.db')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # Desativa avisos desnecessários
-db = SQLAlchemy(app) # Inicia a ligação da base de dados com a app Flask
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
 # -------------------------------------------------------------------
 # 2. DEFINIÇÃO DAS TABELAS (MODELOS)
 # -------------------------------------------------------------------
-
-# Substitui os nossos dicionários Python antigos
-# Define a tabela para TODAS as assistências técnicas
 class Loja(db.Model):
-    __tablename__ = 'loja' # Nome da tabela na base de dados
-    id = db.Column(db.Integer, primary_key=True) # Coluna de ID (ex: 1001, 2001)
-    name = db.Column(db.String(100), nullable=False) # Coluna de Nome
-    type = db.Column(db.String(10), nullable=False) # 'pc' ou 'celular'
+    __tablename__ = 'loja'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    type = db.Column(db.String(10), nullable=False)
     address = db.Column(db.String(200))
     phone = db.Column(db.String(20))
     lat = db.Column(db.Float)
     lng = db.Column(db.Float)
-    # Colunas da "Avaliação do Especialista" (Nível 1)
-    is_verified = db.Column(db.Boolean, default=False) # É uma loja verificada?
-    rating = db.Column(db.Integer) # A tua avaliação (1-5)
-    review = db.Column(db.String(300)) # O teu comentário
-    
-    # Relação: Diz à tabela "Loja" que ela pode ter "muitas" avaliações
+    is_verified = db.Column(db.Boolean, default=False)
+    rating = db.Column(db.Integer)
+    review = db.Column(db.String(300))
     avaliacoes = db.relationship('AvaliacaoUsuario', backref='loja', lazy=True)
 
-# Nova tabela para guardar as avaliações dos utilizadores
 class AvaliacaoUsuario(db.Model):
     __tablename__ = 'avaliacao_usuario'
-    id = db.Column(db.Integer, primary_key=True) # ID da avaliação
-    rating = db.Column(db.Integer, nullable=False) # A nota (1-5) que o utilizador deu
-    
-    # Chave estrangeira: Liga esta avaliação a uma loja específica
+    id = db.Column(db.Integer, primary_key=True)
+    rating = db.Column(db.Integer, nullable=False)
     loja_id = db.Column(db.Integer, db.ForeignKey('loja.id'), nullable=False)
 
 # -------------------------------------------------------------------
-# 3. "BANCO DE DADOS FALSO" - (APAGÁMOS REPAIR_SHOPS e VERIFIED_SHOPS)
+# 3. "BANCO DE DADOS FALSO" - (Peças e Montagens Prontas)
 # -------------------------------------------------------------------
 # (Os dicionários CPUS, MOTHERBOARDS, RAM_MODULES, GPUS, PSUS, COOLERS, CASES, PREBUILTS continuam aqui, exatamente como antes)
 CPUS = {
@@ -93,6 +83,23 @@ PREBUILTS = {
     "8": { "id": "8", "name": "Muito Barata (Intel)", "description": "Ponto de entrada para jogos.", "category": "Muito Barata", "parts": {"CPU": "Intel Core i3-12100F", "Placa-mãe": "Gigabyte H610M", "RAM": "Corsair Vengeance 16GB (DDR4)", "GPU": "NVIDIA GeForce GTX 1660 Super", "Fonte": "Fonte Mancer 500W", "Gabinete": "Gabinete Mancer Goblin", "Cooler": "Cooler Box Original Intel"} }
 }
 
+# --- NOVO: Dados temporários para migração ---
+REPAIR_SHOPS_DATA = {
+    "1001": { "id": "1001", "name": "ConsertaPC Rápido", "type": "pc", "address": "Rua Fictícia, 123 - Centro", "phone": "(21) 99999-1111", "lat": -22.9068, "lng": -43.1729 },
+    "1002": { "id": "1002", "name": "SalvaCelular", "type": "celular", "address": "Av. Principal, 456 - Bairro Novo", "phone": "(21) 98888-2222", "lat": -22.9519, "lng": -43.1822 },
+    "1003": { "id": "1003", "name": "Dr. Computador & Cia", "type": "pc", "address": "Praça da Tecnologia, 789", "phone": "(21) 97777-3333", "lat": -22.9035, "lng": -43.1795 },
+    "1004": { "id": "1004", "name": "Rei do Smartphone", "type": "celular", "address": "Rua Fictícia, 130 - Centro", "phone": "(21) 96666-4444", "lat": -22.9075, "lng": -43.1740 },
+    "1005": { "id": "1005", "name": "PC-Help Soluções", "type": "pc", "address": "Av. Principal, 999 - Bairro Novo", "phone": "(21) 95555-5555", "lat": -22.9530, "lng": -43.1830 },
+    "1006": { "id": "1006", "name": "Help Informática", "type": "pc", "address": "Rua da Passagem, 50 - Loja B", "phone": "(21) 94444-1111", "lat": -22.9497, "lng": -43.1818 },
+    "1007": { "id": "1007", "name": "Solução Notebook", "type": "pc", "address": "Travessa dos Tamoios, 15", "phone": "(21) 93333-2222", "lat": -22.9320, "lng": -43.1799 },
+    "1008": { "id": "1008", "name": "SOS Celulares", "type": "celular", "address": "Largo do Machado, 22", "phone": "(21) 92222-3333", "lat": -22.9304, "lng": -43.1788 },
+    "1009": { "id": "1009", "name": "Smart Reparo", "type": "celular", "address": "Rua Sete de Setembro, 101", "phone": "(21) 91111-4444", "lat": -22.9048, "lng": -43.1784 }
+}
+VERIFIED_SHOPS_DATA = {
+    "2001": { "id": "2001", "name": "Reparo Justo PC", "type": "pc", "address": "Av. Confiança, 10 - Centro", "phone": "(21) 90000-1111", "lat": -22.9050, "lng": -43.1760, "rating": 5, "review": "Preço justo e não tentaram 'empurrar' peças extra." },
+    "2002": { "id": "2002", "name": "Celular Honesto", "type": "celular", "address": "Rua da Garantia, 20 - Lapa", "phone": "(21) 90000-2222", "lat": -22.9135, "lng": -43.1800, "rating": 4, "review": "Serviço rápido, mas um pouco mais caro. O problema foi resolvido." },
+    "2003": { "id": "2003", "name": "InfoFiel", "type": "pc", "address": "Rua do Técnico, 30", "phone": "(21) 90000-3333", "lat": -22.9080, "lng": -43.1810, "rating": 5, "review": "Especialista em PCs, muito confiável." }
+}
 
 # -------------------------------------------------------------------
 # 4. ROTAS PARA API (APIs)
@@ -118,31 +125,27 @@ def get_prebuilts(): return jsonify(list(PREBUILTS.values()))
 # --- ROTAS DE ASSISTÊNCIA (AGORA LÊEM DA BASE DE DADOS) ---
 @app.route('/api/get-pc-shops', methods=['GET'])
 def get_pc_shops():
-    # Procura na tabela 'Loja' por todas as lojas onde type == 'pc'
-    lojas = Loja.query.filter_by(type='pc').all()
-    # Converte os resultados para o formato JSON que o frontend espera
+    lojas = Loja.query.filter_by(type='pc', is_verified=False).all() # Só as não-verificadas
     lojas_json = [{"id": loja.id, "name": loja.name, "type": loja.type, "address": loja.address, "phone": loja.phone, "lat": loja.lat, "lng": loja.lng} for loja in lojas]
     return jsonify(lojas_json)
 
 @app.route('/api/get-celular-shops', methods=['GET'])
 def get_celular_shops():
-    lojas = Loja.query.filter_by(type='celular').all()
+    lojas = Loja.query.filter_by(type='celular', is_verified=False).all() # Só as não-verificadas
     lojas_json = [{"id": loja.id, "name": loja.name, "type": loja.type, "address": loja.address, "phone": loja.phone, "lat": loja.lat, "lng": loja.lng} for loja in lojas]
     return jsonify(lojas_json)
 
 @app.route('/api/get-verified-shops', methods=['GET'])
 def get_verified_shops():
-    # Procura lojas que são marcadas como 'is_verified'
     lojas = Loja.query.filter_by(is_verified=True).all()
     lojas_json = []
     for loja in lojas:
-        # Para cada loja, calcula a média das avaliações dos utilizadores
-        avaliacoes = loja.avaliacoes # Pega todas as avaliações ligadas a esta loja
+        avaliacoes = loja.avaliacoes
         if avaliacoes:
             user_rating_avg = sum([ava.rating for ava in avaliacoes]) / len(avaliacoes)
             user_rating_count = len(avaliacoes)
         else:
-            user_rating_avg = None # Nenhuma avaliação ainda
+            user_rating_avg = None 
             user_rating_count = 0
 
         lojas_json.append({
@@ -225,11 +228,60 @@ def serve_index():
     return render_template('index.html')
 
 # -------------------------------------------------------------------
+# --- NOVO: ROTA TEMPORÁRIA PARA POPULAR A BASE DE DADOS ---
+# -------------------------------------------------------------------
+@app.route('/api/init-db')
+def init_db():
+    try:
+        # Apaga todos os dados existentes para evitar duplicados
+        db.session.execute(text('TRUNCATE TABLE avaliacao_usuario RESTART IDENTITY CASCADE'))
+        db.session.execute(text('TRUNCATE TABLE loja RESTART IDENTITY CASCADE'))
+        
+        # Adiciona as Lojas Verificadas
+        for id_str, loja_data in VERIFIED_SHOPS_DATA.items():
+            nova_loja = Loja(
+                id=int(id_str),
+                name=loja_data['name'],
+                type=loja_data['type'],
+                address=loja_data['address'],
+                phone=loja_data['phone'],
+                lat=loja_data['lat'],
+                lng=loja_data['lng'],
+                is_verified=True,
+                rating=loja_data['rating'],
+                review=loja_data['review']
+            )
+            db.session.add(nova_loja)
+
+        # Adiciona as Lojas Não Verificadas
+        for id_str, loja_data in REPAIR_SHOPS_DATA.items():
+            nova_loja = Loja(
+                id=int(id_str),
+                name=loja_data['name'],
+                type=loja_data['type'],
+                address=loja_data['address'],
+                phone=loja_data['phone'],
+                lat=loja_data['lat'],
+                lng=loja_data['lng'],
+                is_verified=False # A diferença é esta
+            )
+            db.session.add(nova_loja)
+
+        # Guarda as alterações na base de dados
+        db.session.commit()
+        
+        return "Base de dados populada com sucesso! 3 lojas verificadas e 9 lojas normais adicionadas."
+    
+    except Exception as e:
+        db.session.rollback() # Desfaz as alterações se der erro
+        return f"Ocorreu um erro: {str(e)}"
+# --- FIM DA NOVA ROTA ---
+
+
+# -------------------------------------------------------------------
 # 8. RODA O SERVIDOR (Apenas para testes locais)
 # -------------------------------------------------------------------
 if __name__ == '__main__':
-    # --- NOVO: Cria as tabelas na base de dados (se não existirem) ---
     with app.app_context():
         db.create_all()
-    # --- FIM DA ATUALIZAÇÃO ---
     app.run(debug=True, port=5000)
