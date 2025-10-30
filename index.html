@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Verificador de Hardware</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f0f2f5; }
+        nav { background-color: #007bff; padding: 10px 20px; display: flex; justify-content: center; gap: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        nav button { background-color: white; color: #007bff; border: none; padding: 10px 20px; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; transition: all 0.2s ease; }
+        nav button:hover { background-color: #e9ecef; }
+        main { max-width: 700px; margin: 20px auto; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+        .page-section { display: none; }
+
+        /* Estilos da Montagem */
+        #page-builder .form-row { margin-bottom: 12px; display: grid; grid-template-columns: 120px 1fr; align-items: center; }
+        #page-builder label { font-weight: bold; }
+        #page-builder button { padding: 10px; font-size: 16px; margin-top: 15px; width: 100%; cursor: pointer; background-color: #28a745; color: white; border: none; border-radius: 5px; }
+        
+        /* Estilos do Relatório */
+        #results { margin-top: 20px; border-top: 2px solid #ccc; padding-top: 10px; }
+        #results h4 { margin-top: 20px; margin-bottom: 10px; color: #333; }
+        #results p { margin: 4px 0 4px 0; }
+        .report-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; }
+        .report-item { padding: 12px; border-radius: 6px; border: 1px solid; font-size: 14px; font-weight: 500; }
+        .error-item { border-color: #f5c6cb; background-color: #f8d7da; color: #721c24; }
+        .warning-item { border-color: #ffeeba; background-color: #fff3cd; color: #856404; }
+        .success { color: green; font-weight: bold; font-size: 18px; }
+        .error { color: red; font-weight: bold; font-size: 18px; }
+
+        /* Estilos da Seção de Assistência */
+        .shop-list { display: grid; grid-template-columns: 1fr; gap: 15px; padding-top: 15px; }
+        .shop-card { border: 1px solid #ccc; padding: 15px; border-radius: 5px; background-color: #f9f9f9; }
+        .shop-card h4 { margin: 0 0 10px 0; color: #007bff; }
+        .shop-card p { margin: 5px 0; }
+        
+        /* Estilos da Página de Montagens Prontas */
+        .prebuilt-list { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .prebuilt-card { border: 1px solid #17a2b8; padding: 15px; border-radius: 5px; background-color: #f8f9fa; }
+        .prebuilt-card h4 { margin: 0 0 10px 0; color: #17a2b8; }
+        .prebuilt-card p { margin: 5px 0; font-style: italic; }
+        .prebuilt-card ul { margin: 10px 0 0 0; padding-left: 20px; }
+        .prebuilt-card li { font-size: 14px; }
+        .filter-bar { margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
+        .filter-btn { padding: 8px 15px; font-size: 14px; font-weight: bold; border: 2px solid #17a2b8; background-color: #fff; color: #17a2b8; border-radius: 5px; cursor: pointer; transition: all 0.2s ease; }
+        .filter-btn.active, .filter-btn:hover { background-color: #17a2b8; color: #fff; }
+        .card-hidden { display: none; }
+
+        /* Estilos do Seletor Visual de Peças */
+        .visual-select-container { position: relative; }
+        .selected-option-box { border: 1px solid #ced4da; border-radius: 5px; padding: 5px 10px; display: flex; align-items: center; cursor: pointer; background: #fff; min-height: 38px; gap: 10px; }
+        .selected-option-box img { width: 50px; height: auto; object-fit: contain; }
+        .selected-option-box span { font-weight: bold; }
+        .options-list { display: none; position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 1px solid #ced4da; border-top: none; border-radius: 0 0 5px 5px; z-index: 10; max-height: 300px; overflow-y: auto; box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
+        .option-item { display: flex; align-items: center; padding: 10px; cursor: pointer; border-top: 1px solid #f0f2f5; gap: 15px; }
+        .option-item:first-child { border-top: none; }
+        .option-item:hover { background-color: #f0f2f5; }
+        .option-item img { width: 80px; height: auto; object-fit: contain; }
+        .option-item span { font-size: 16px; }
+
+        /* Estilos do Acordeão */
+        .accordion-button {
+            background-color: #eee;
+            color: #444;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .accordion-button:hover, .accordion-button.active {
+            background-color: #ddd;
+        }
+        .accordion-button.active {
+             border-radius: 5px 5px 0 0;
+        }
+        .accordion-panel {
+            padding: 0 18px;
+            background-color: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            border-radius: 0 0 5px 5px;
+            border: 1px solid #ddd;
+            border-top: none;
+        }
+        /* --- NOVO: Estilo especial para o botão de Verificadas --- */
+        .accordion-button.verified {
+            background-color: #d4edda; /* Verde claro */
+            color: #155724; /* Verde escuro */
+        }
+        .accordion-button.verified:hover, .accordion-button.verified.active {
+            background-color: #c3e6cb;
+        }
+        /* --- FIM DA ATUALIZAÇÃO --- */
+
+        /* Estilos do Consumo e Share */
+        #wattage-report { margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ccc; }
+        #wattage-report h4 { margin-top: 0; color: #007bff; }
+        #share-area { margin-top: 20px; display: flex; gap: 10px; }
+        #share-url { flex-grow: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        #copy-button { padding: 8px 15px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        #copy-button:hover { background-color: #5a6268; }
+        
+    </style>
+</head>
+<body>
+
+    <nav>
+        <button id="nav-home">Início</button>
+        <button id="nav-builder">Montar PC</button>
+        <button id="nav-prebuilts">Montagens</button>
+        <button id="nav-shops">Assistências</button>
+    </nav>
+
+    <main>
+        <section id="page-home" class="page-section">
+            <h2>Bem-vindo ao Verificador de Hardware!</h2>
+            <p>Selecione uma opção na barra de navegação acima:</p>
+            <ul>
+                <li><strong>Montar PC:</strong> Verifique a compatibilidade e gargalos da sua futura máquina.</li>
+                <li><strong>Montagens:</strong> Veja nossas builds recomendadas.</li>
+                <li><strong>Assistências:</strong> Encontre uma assistência técnica para PCs ou Celulares.</li>
+            </ul>
+        </section>
+
+        <section id="page-builder" class="page-section">
+            <h2>Monte seu PC</h2>
+            <div class="form-row"><label>CPU:</label><div id="cpu-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione uma CPU --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="cpu_id" value=""></div>
+            <div class="form-row"><label>Placa-mãe:</label><div id="mobo-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione uma Placa-mãe --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="mobo_id" value=""></div>
+            <div class="form-row"><label>Cooler:</label><div id="cooler-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione um Cooler --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="cooler_id" value=""></div>
+            <div class="form-row"><label>RAM:</label><div id="ram-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione uma RAM --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="ram_id" value=""></div>
+            <div class="form-row"><label>GPU:</label><div id="gpu-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione uma GPU --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="gpu_id" value=""></div>
+            <div class="form-row"><label>Gabinete:</label><div id="case-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione um Gabinete --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="case_id" value=""></div>
+            <div class="form-row"><label>Fonte (PSU):</label><div id="psu-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione uma Fonte --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="psu_id" value=""></div>
+            <button id="check-button">Verificar Configuração</button>
+            <button id="share-button" style="background-color: #17a2b8; margin-top: 10px;">Compartilhar Build</button>
+            <div id="results">
+                <h3>Relatório:</h3>
+                <div id="compat-status"></div> 
+                <div id="incompatibilities-section"><h4 style="display: none;">Peças Incompatíveis:</h4><div id="incompatibilities-list" class="report-list"></div></div>
+                <div id="bottlenecks-section"><h4 style="display: none;">Possíveis Gargalos:</h4><div id="bottlenecks-list" class="report-list"></div></div>
+                <div id="other-warnings-section"><h4 style="display: none;">Outros Avisos:</h4><div id="other-warnings-list" class="report-list"></div></div>
+                <div id="wattage-report"></div>
+            </div>
+            <div id="share-area" style="display: none;">
+                <input type="text" id="share-url" readonly title="Link para compartilhar">
+                <button id="copy-button">Copiar</button>
+            </div>
+        </section>
+        
+        <section id="page-prebuilts" class="page-section">
+            <h2>Montagens Recomendadas</h2>
+            <p>Selecione uma categoria para filtrar as montagens.</p>
+            <div class="filter-bar">
+                <button class="filter-btn active" data-category="all">Mostrar Todas</button>
+                <button class="filter-btn" data-category="Custo-Benefício">Custo-Benefício</button>
+                <button class="filter-btn" data-category="Top de Linha">Top de Linha</button>
+                <button class="filter-btn" data-category="Opção Média">Opção Média</button>
+                <button class="filter-btn" data-category="Muito Barata">Muito Barata</button>
+            </div>
+            <div id="prebuilts-list" class="prebuilt-list">
+                <p>Carregando montagens...</p>
+            </div>
+        </section>
+        
+        <section id="page-shops" class="page-section">
+            <h2>Encontrar Assistência Técnica</h2>
+            <p>Clique numa categoria para expandir a lista.</p>
+
+            <button type="button" class="accordion-button verified">⭐ Assistências Verificadas (Recomendado)</button>
+            <div class="accordion-panel">
+                <div id="verified-shops-list" class="shop-list">
+                    <p>Carregando...</p> 
+                </div>
+            </div>
+            <button type="button" class="accordion-button">Assistências de PC (Todas)</button>
+            <div class="accordion-panel">
+                <div id="pc-shops-list" class="shop-list">
+                    <p>Carregando...</p> 
+                </div>
+            </div>
+
+            <button type="button" class="accordion-button">Assistências de Celular (Todas)</button>
+            <div class="accordion-panel">
+                <div id="celular-shops-list" class="shop-list">
+                    <p>Carregando...</p>
+                </div>
+            </div>
+        </section>
+        </main>
+
+
+    <script>
+        const API_BASE_URL = 'http://127.0.0.1:5000';
+        const loadedPartsData = {};
+
+        // Lógica de Navegação
+        const navHome = document.getElementById('nav-home');
+        const navBuilder = document.getElementById('nav-builder');
+        const navPrebuilts = document.getElementById('nav-prebuilts');
+        const navShops = document.getElementById('nav-shops');
+        const allPages = document.querySelectorAll('.page-section');
+        function showPage(pageId) {
+            allPages.forEach(page => { page.style.display = 'none'; });
+            const pageToShow = document.getElementById(pageId);
+             if (pageToShow) { pageToShow.style.display = 'block'; } 
+             else { console.error(`Página com ID ${pageId} não encontrada.`); document.getElementById('page-home').style.display = 'block'; }
+        }
+        navHome.addEventListener('click', () => showPage('page-home'));
+        navBuilder.addEventListener('click', () => showPage('page-builder'));
+        navPrebuilts.addEventListener('click', () => showPage('page-prebuilts'));
+        navShops.addEventListener('click', () => showPage('page-shops'));
+
+        // Lógica de Carregamento Inicial
+        document.addEventListener('DOMContentLoaded', async () => {
+            showPage('page-home');
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialValues = {};
+            const partTypes = ['cpu', 'mobo', 'cooler', 'ram', 'gpu', 'case', 'psu'];
+            partTypes.forEach(type => {
+                const paramValue = urlParams.get(`${type}_id`);
+                if (paramValue) {
+                    initialValues[`${type}_id`] = paramValue;
+                    const hiddenInput = document.getElementById(`${type}_id`);
+                    if(hiddenInput) hiddenInput.value = paramValue;
+                }
+            });
+
+            try {
+                await Promise.all([
+                    populateVisualSelector('/api/get-cpus', 'cpu-visual-select', 'cpu_id', 'Selecione uma CPU'),
+                    populateVisualSelector('/api/get-motherboards', 'mobo-visual-select', 'mobo_id', 'Selecione uma Placa-mãe'),
+                    populateVisualSelector('/api/get-coolers', 'cooler-visual-select', 'cooler_id', 'Selecione um Cooler'),
+                    populateVisualSelector('/api/get-ram', 'ram-visual-select', 'ram_id', 'Selecione uma RAM'),
+                    populateVisualSelector('/api/get-gpus', 'gpu-visual-select', 'gpu_id', 'Selecione uma GPU'),
+                    populateVisualSelector('/api/get-cases', 'case-visual-select', 'case_id', 'Selecione um Gabinete'),
+                    populateVisualSelector('/api/get-psus', 'psu-visual-select', 'psu_id', 'Selecione uma Fonte'),
+                    populateShopList('/api/get-pc-shops', 'pc-shops-list'),
+                    populateShopList('/api/get-celular-shops', 'celular-shops-list'),
+                    populatePrebuiltList('/api/get-prebuilts', 'prebuilts-list'),
+                    
+                    // --- NOVO: Carregar a nova lista ---
+                    populateShopList('/api/get-verified-shops', 'verified-shops-list')
+                ]);
+
+                setupAccordion();
+                
+                // Pré-seleciona itens da URL
+                partTypes.forEach(type => {
+                    const initialId = initialValues[`${type}_id`];
+                    const hiddenInputId = `${type}_id`;
+                    const containerId = `${type}-visual-select`;
+                    if (initialId && loadedPartsData[hiddenInputId]) {
+                        const selectedItem = loadedPartsData[hiddenInputId].find(item => item.id === initialId);
+                        if (selectedItem) {
+                            const container = document.getElementById(containerId);
+                            const selectedBox = container.querySelector('.selected-option-box');
+                            selectedBox.innerHTML = `<img src="${selectedItem.image_url}" alt="${selectedItem.name}"><span>${selectedItem.name}</span>`;
+                        }
+                    }
+                });
+
+            } catch (error) { console.error("Erro durante o carregamento inicial:", error); }
+        });
+
+        // Função populateShopList (Sem Mudanças)
+        async function populateShopList(apiEndpoint, elementId) {
+            const listElement = document.getElementById(elementId);
+             if (!listElement) return;
+            try {
+                const response = await fetch(API_BASE_URL + apiEndpoint);
+                if (!response.ok) throw new Error(`Falha ao buscar ${apiEndpoint}`);
+                const shops = await response.json();
+                listElement.innerHTML = '';
+                if (shops.length === 0) {
+                    listElement.innerHTML = '<p style="padding-top: 15px;">Nenhuma assistência encontrada.</p>'; return;
+                }
+                shops.forEach(shop => {
+                    const shopCard = document.createElement('div');
+                    shopCard.className = 'shop-card';
+                    // --- NOVO: Adiciona o tipo (PC/Celular) ao card ---
+                    const shopType = shop.type === 'pc' ? 'PC' : 'Celular';
+                    shopCard.innerHTML = `<h4>${shop.name} <span style="font-size: 12px; color: #6c757d;">(${shopType})</span></h4><p><strong>Endereço:</strong> ${shop.address}</p><p><strong>Telefone:</strong> ${shop.phone}</p>`;
+                    listElement.appendChild(shopCard);
+                });
+            } catch (error) {
+                console.error(`Erro ao popular ${elementId}:`, error);
+                listElement.innerHTML = '<p class="error">Erro ao carregar assistências.</p>';
+            }
+        }
+
+        // Função populatePrebuiltList (Sem Mudanças)
+        async function populatePrebuiltList(apiEndpoint, elementId) {
+            const listElement = document.getElementById(elementId);
+             if (!listElement) return;
+            try {
+                const response = await fetch(API_BASE_URL + apiEndpoint);
+                if (!response.ok) throw new Error(`Falha ao buscar ${apiEndpoint}`);
+                const builds = await response.json();
+                listElement.innerHTML = '';
+                if (builds.length === 0) {
+                    listElement.innerHTML = '<p>Nenhuma montagem encontrada.</p>'; return;
+                }
+                builds.forEach(build => {
+                    const buildCard = document.createElement('div');
+                    buildCard.className = 'prebuilt-card';
+                    buildCard.dataset.category = build.category;
+                    let partsList = '';
+                    for (const partName in build.parts) { partsList += `<li><strong>${partName}:</strong> ${build.parts[partName]}</li>`; }
+                    buildCard.innerHTML = `<h4>${build.name}</h4><p>${build.description}</p><ul>${partsList}</ul>`;
+                    listElement.appendChild(buildCard);
+                });
+                setupCategoryFilters();
+            } catch (error) {
+                console.error(`Erro ao popular ${elementId}:`, error);
+                listElement.innerHTML = '<p class="error">Erro ao carregar montagens.</p>';
+            }
+        }
+
+        // Função setupCategoryFilters (Sem Mudanças)
+        function setupCategoryFilters() {
+            const filterButtons = document.querySelectorAll('#page-prebuilts .filter-btn');
+            const buildCards = document.querySelectorAll('#page-prebuilts .prebuilt-card');
+             if (!filterButtons.length || !buildCards.length) return;
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    const selectedCategory = button.dataset.category;
+                    buildCards.forEach(card => {
+                        card.classList.toggle('card-hidden', !(selectedCategory === 'all' || card.dataset.category === selectedCategory));
+                    });
+                });
+            });
+        }
+        
+        // Função setupAccordion (Sem Mudanças)
+        function setupAccordion() {
+            const buttons = document.querySelectorAll('.accordion-button');
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    button.classList.toggle('active');
+                    const panel = button.nextElementSibling;
+                    if (panel.style.maxHeight) {
+                        panel.style.maxHeight = null;
+                    } else {
+                        panel.style.maxHeight = panel.scrollHeight + "px"; 
+                    } 
+                });
+            });
+        }
+
+        // Função populateVisualSelector (Sem Mudanças)
+        async function populateVisualSelector(apiEndpoint, containerId, hiddenInputId, placeholderText) {
+            const container = document.getElementById(containerId);
+            if (!container) { console.error(`Container ${containerId} não encontrado.`); return; }
+            const selectedBox = container.querySelector('.selected-option-box');
+            const optionsList = container.querySelector('.options-list');
+            const hiddenInput = document.getElementById(hiddenInputId);
+            if (!selectedBox || !optionsList || !hiddenInput) { console.error(`Elementos internos não encontrados para ${containerId}`); return; }
+
+            try {
+                const response = await fetch(API_BASE_URL + apiEndpoint);
+                if (!response.ok) throw new Error(`Falha ao buscar ${apiEndpoint}`);
+                const items = await response.json();
+                loadedPartsData[hiddenInputId] = items;
+                optionsList.innerHTML = '';
+                if (!hiddenInput.value) { selectedBox.innerHTML = `<span>${placeholderText}</span>`; }
+
+                selectedBox.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    document.querySelectorAll('.options-list').forEach(list => { if (list !== optionsList) list.style.display = 'none'; });
+                    optionsList.style.display = optionsList.style.display === 'block' ? 'none' : 'block';
+                });
+
+                items.forEach(item => {
+                    const option = document.createElement('div');
+                    option.className = 'option-item';
+                    option.dataset.id = item.id;
+                    option.innerHTML = `<img src="${item.image_url}" alt="${item.name}"><span>${item.name}</span>`;
+                    option.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        selectedBox.innerHTML = `<img src="${item.image_url}" alt="${item.name}"><span>${item.name}</span>`;
+                        hiddenInput.value = item.id;
+                        optionsList.style.display = 'none';
+                    });
+                    optionsList.appendChild(option);
+                });
+
+                 if (hiddenInput.value) {
+                     const selectedItem = items.find(item => item.id === hiddenInput.value);
+                     if (selectedItem) {
+                         selectedBox.innerHTML = `<img src="${selectedItem.image_url}" alt="${selectedItem.name}"><span>${selectedItem.name}</span>`;
+                     } else {
+                        hiddenInput.value = '';
+                        selectedBox.innerHTML = `<span>${placeholderText}</span>`;
+                     }
+                 }
+
+            } catch (error) {
+                console.error(`Erro ao popular ${containerId}:`, error);
+                selectedBox.innerHTML = `<span>Erro ao carregar</span>`;
+            }
+        }
+        
+        // Fecha a lista se clicar fora
+        document.addEventListener('click', () => {
+             document.querySelectorAll('.options-list').forEach(list => list.style.display = 'none');
+        });
+
+        // Função de Checagem de Build (Sem Mudanças)
+        const checkButton = document.getElementById('check-button');
+        const wattageReportDiv = document.getElementById('wattage-report');
+        const compatStatusDiv = document.getElementById('compat-status');
+        const incompatDiv = document.getElementById('incompatibilities-list');
+        const bottleneckDiv = document.getElementById('bottlenecks-list');
+        const otherWarningsDiv = document.getElementById('other-warnings-list');
+        const incompatSection = document.getElementById('incompatibilities-section');
+        const bottleneckSection = document.getElementById('bottlenecks-section');
+        const otherWarningsSection = document.getElementById('other-warnings-section');
+
+        checkButton.addEventListener('click', async () => {
+            const buildData = {
+                cpu_id: document.getElementById('cpu_id').value, mobo_id: document.getElementById('mobo_id').value,
+                cooler_id: document.getElementById('cooler_id').value, ram_id: document.getElementById('ram_id').value,
+                gpu_id: document.getElementById('gpu_id').value, case_id: document.getElementById('case_id').value,
+                psu_id: document.getElementById('psu_id').value
+            };
+            compatStatusDiv.innerHTML = ''; incompatDiv.innerHTML = ''; bottleneckDiv.innerHTML = ''; otherWarningsDiv.innerHTML = ''; wattageReportDiv.innerHTML = '';
+            incompatSection.querySelector('h4').style.display = 'none'; bottleneckSection.querySelector('h4').style.display = 'none'; otherWarningsSection.querySelector('h4').style.display = 'none';
+
+            try {
+                const compatResponse = await fetch(API_BASE_URL + '/api/check-build', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(buildData) });
+                if (!compatResponse.ok) throw new Error('Erro na checagem de compatibilidade.');
+                const report = await compatResponse.json();
+
+                compatStatusDiv.innerHTML = report.build_is_compatible ? '<p class="success">✅ CONFIGURAÇÃO COMPATÍVEL!</p>' : '<p class="error">❌ CONFIGURAÇÃO INCOMPATÍVEL!</p>';
+                if (!report.build_is_compatible) {
+                    incompatSection.querySelector('h4').style.display = 'block';
+                    report.incompatibilities.forEach(errorMsg => { const div = document.createElement('div'); div.className = 'report-item error-item'; div.textContent = errorMsg; incompatDiv.appendChild(div); });
+                }
+                if (report.bottlenecks.length > 0) {
+                    bottleneckSection.querySelector('h4').style.display = 'block';
+                    report.bottlenecks.forEach(warningMsg => { const div = document.createElement('div'); div.className = 'report-item warning-item'; div.textContent = warningMsg; bottleneckDiv.appendChild(div); });
+                }
+                if (report.other_warnings.length > 0) {
+                    otherWarningsSection.querySelector('h4').style.display = 'block';
+                    report.other_warnings.forEach(warningMsg => { const div = document.createElement('div'); div.className = 'report-item warning-item'; div.textContent = warningMsg; otherWarningsDiv.appendChild(div); });
+                }
+
+                const wattageResponse = await fetch(API_BASE_URL + '/api/calculate-wattage', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(buildData) });
+                if (wattageResponse.ok) {
+                    const wattageData = await wattageResponse.json();
+                    wattageReportDiv.innerHTML = `<h4>Estimativa de Consumo:</h4><p>Consumo estimado: <strong>${wattageData.estimated_wattage}W</strong></p><p style="color: #007bff; font-weight: bold;">Recomendação: Fonte de <strong>${wattageData.recommended_wattage}W</strong> ou superior.</p>`;
+                } else { wattageReportDiv.innerHTML = '<p class="error">Não foi possível calcular o consumo.</p>'; }
+
+            } catch (error) {
+                console.error('Falha na requisição:', error);
+                compatStatusDiv.innerHTML = '<p class="error">Não foi possível verificar. Backend está rodando?</p>';
+            }
+        });
+
+        // Lógica de Compartilhar/Copiar URL (Sem Mudanças)
+        const shareButton = document.getElementById('share-button');
+        const shareArea = document.getElementById('share-area');
+        const shareUrlInput = document.getElementById('share-url');
+        const copyButton = document.getElementById('copy-button');
+
+        shareButton.addEventListener('click', () => {
+            const params = [];
+            const partTypes = ['cpu', 'mobo', 'cooler', 'ram', 'gpu', 'case', 'psu'];
+            partTypes.forEach(type => { const value = document.getElementById(`${type}_id`).value; if (value) { params.push(`${type}_id=${encodeURIComponent(value)}`); } });
+            if (params.length > 0) {
+                const queryString = params.join('&');
+                const shareUrl = `${window.location.origin}${window.location.pathname}?${queryString}`;
+                shareUrlInput.value = shareUrl;
+                shareArea.style.display = 'flex';
+            } else { alert("Selecione pelo menos uma peça."); shareArea.style.display = 'none'; }
+        });
+
+        copyButton.addEventListener('click', () => {
+            shareUrlInput.select(); shareUrlInput.setSelectionRange(0, 99999);
+            try { document.execCommand('copy'); alert('Link copiado!'); } catch (err) { alert('Não foi possível copiar.'); }
+        });
+    </script>
+
+</body>
+</html>
