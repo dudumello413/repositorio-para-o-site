@@ -1,13 +1,57 @@
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy # --- NOVO ---
 import math 
+import os # --- NOVO (Para ler a variável de ambiente) ---
 
 app = Flask(__name__, template_folder='.')
 CORS(app) 
 
 # -------------------------------------------------------------------
-# 1. "BANCO DE DADOS FALSO"
+# 1. CONFIGURAÇÃO DA BASE DE DADOS (NOVO)
 # -------------------------------------------------------------------
+# Pega no link secreto da base de dados que definiste no Render
+# Se não encontrar (ex: no teu PC local), usa uma base de dados temporária chamada 'test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///test.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False # Desativa avisos desnecessários
+db = SQLAlchemy(app) # Inicia a ligação da base de dados com a app Flask
+
+# -------------------------------------------------------------------
+# 2. DEFINIÇÃO DAS TABELAS (MODELOS)
+# -------------------------------------------------------------------
+
+# Substitui os nossos dicionários Python antigos
+# Define a tabela para TODAS as assistências técnicas
+class Loja(db.Model):
+    __tablename__ = 'loja' # Nome da tabela na base de dados
+    id = db.Column(db.Integer, primary_key=True) # Coluna de ID (ex: 1001, 2001)
+    name = db.Column(db.String(100), nullable=False) # Coluna de Nome
+    type = db.Column(db.String(10), nullable=False) # 'pc' ou 'celular'
+    address = db.Column(db.String(200))
+    phone = db.Column(db.String(20))
+    lat = db.Column(db.Float)
+    lng = db.Column(db.Float)
+    # Colunas da "Avaliação do Especialista" (Nível 1)
+    is_verified = db.Column(db.Boolean, default=False) # É uma loja verificada?
+    rating = db.Column(db.Integer) # A tua avaliação (1-5)
+    review = db.Column(db.String(300)) # O teu comentário
+    
+    # Relação: Diz à tabela "Loja" que ela pode ter "muitas" avaliações
+    avaliacoes = db.relationship('AvaliacaoUsuario', backref='loja', lazy=True)
+
+# Nova tabela para guardar as avaliações dos utilizadores
+class AvaliacaoUsuario(db.Model):
+    __tablename__ = 'avaliacao_usuario'
+    id = db.Column(db.Integer, primary_key=True) # ID da avaliação
+    rating = db.Column(db.Integer, nullable=False) # A nota (1-5) que o utilizador deu
+    
+    # Chave estrangeira: Liga esta avaliação a uma loja específica
+    loja_id = db.Column(db.Integer, db.ForeignKey('loja.id'), nullable=False)
+
+# -------------------------------------------------------------------
+# 3. "BANCO DE DADOS FALSO" - (APAGÁMOS REPAIR_SHOPS e VERIFIED_SHOPS)
+# -------------------------------------------------------------------
+# (Os dicionários CPUS, MOTHERBOARDS, RAM_MODULES, GPUS, PSUS, COOLERS, CASES, PREBUILTS continuam aqui, exatamente como antes)
 CPUS = {
     "1": { "id": "1", "name": "AMD Ryzen 5 5600X", "socket": "AM4", "ram_support_types": ["DDR4"], "tier": 7, "tdp": 65, "image_url": "static/images/amd-ryzen-5-5600x.jpg" },
     "2": { "id": "2", "name": "Intel Core i5-13600K", "socket": "LGA1700", "ram_support_types": ["DDR4", "DDR5"], "tier": 9, "tdp": 125, "image_url": "static/images/intel-i5-13600k.jpg" }
@@ -38,55 +82,7 @@ CASES = {
     "601": { "id": "601", "name": "Gabinete Gamer Mancer Goblin", "gpu_max_length_mm": 280, "cooler_max_height_mm": 160, "image_url": "static/images/mancer-goblin.jpg" },
     "602": { "id": "602", "name": "Gabinete Corsair 4000D Airflow", "gpu_max_length_mm": 360, "cooler_max_height_mm": 170, "image_url": "static/images/corsair-4000d-airflow.jpg" }
 }
-REPAIR_SHOPS = {
-    "1001": { "id": "1001", "name": "ConsertaPC Rápido", "type": "pc", "address": "Rua Fictícia, 123 - Centro", "phone": "(21) 99999-1111", "lat": -22.9068, "lng": -43.1729 },
-    "1002": { "id": "1002", "name": "SalvaCelular", "type": "celular", "address": "Av. Principal, 456 - Bairro Novo", "phone": "(21) 98888-2222", "lat": -22.9519, "lng": -43.1822 },
-    "1003": { "id": "1003", "name": "Dr. Computador & Cia", "type": "pc", "address": "Praça da Tecnologia, 789", "phone": "(21) 97777-3333", "lat": -22.9035, "lng": -43.1795 },
-    "1004": { "id": "1004", "name": "Rei do Smartphone", "type": "celular", "address": "Rua Fictícia, 130 - Centro", "phone": "(21) 96666-4444", "lat": -22.9075, "lng": -43.1740 },
-    "1005": { "id": "1005", "name": "PC-Help Soluções", "type": "pc", "address": "Av. Principal, 999 - Bairro Novo", "phone": "(21) 95555-5555", "lat": -22.9530, "lng": -43.1830 },
-    "1006": { "id": "1006", "name": "Help Informática", "type": "pc", "address": "Rua da Passagem, 50 - Loja B", "phone": "(21) 94444-1111", "lat": -22.9497, "lng": -43.1818 },
-    "1007": { "id": "1007", "name": "Solução Notebook", "type": "pc", "address": "Travessa dos Tamoios, 15", "phone": "(21) 93333-2222", "lat": -22.9320, "lng": -43.1799 },
-    "1008": { "id": "1008", "name": "SOS Celulares", "type": "celular", "address": "Largo do Machado, 22", "phone": "(21) 92222-3333", "lat": -22.9304, "lng": -43.1788 },
-    "1009": { "id": "1009", "name": "Smart Reparo", "type": "celular", "address": "Rua Sete de Setembro, 101", "phone": "(21) 91111-4444", "lat": -22.9048, "lng": -43.1784 }
-}
-
-# --- ATUALIZADO: Lojas Verificadas com "rating" e "review" ---
-VERIFIED_SHOPS = {
-    "2001": { 
-        "id": "2001", 
-        "name": "Reparo Justo PC", 
-        "type": "pc", 
-        "address": "Av. Confiança, 10 - Centro", 
-        "phone": "(21) 90000-1111",
-        "lat": -22.9050, "lng": -43.1760,
-        "rating": 5, # <-- NOVO
-        "review": "Preço justo e não tentaram 'empurrar' peças extra." # <-- NOVO
-    },
-    "2002": { 
-        "id": "2002", 
-        "name": "Celular Honesto", 
-        "type": "celular", 
-        "address": "Rua da Garantia, 20 - Lapa", 
-        "phone": "(21) 90000-2222",
-        "lat": -22.9135, "lng": -43.1800,
-        "rating": 4, # <-- NOVO
-        "review": "Serviço rápido, mas um pouco mais caro. O problema foi resolvido." # <-- NOVO
-    },
-    "2003": { 
-        "id": "2003", 
-        "name": "InfoFiel", 
-        "type": "pc", 
-        "address": "Rua do Técnico, 30", 
-        "phone": "(21) 90000-3333",
-        "lat": -22.9080, "lng": -43.1810,
-        "rating": 5, # <-- NOVO
-        "review": "Especialista em PCs, muito confiável." # <-- NOVO
-    }
-}
-# --- FIM DA ATUALIZAÇÃO ---
-
 PREBUILTS = {
-    # (O dicionário PREBUILTS completo)
     "1": { "id": "1", "name": "Custo-Benefício (AMD)", "description": "Excelente equilíbrio...", "category": "Custo-Benefício", "parts": {"CPU": "AMD Ryzen 5 5600X", "Placa-mãe": "ASUS TUF B550M-PLUS", "RAM": "Corsair Vengeance 16GB (DDR4)", "GPU": "NVIDIA RTX 3060", "Fonte": "Corsair CV650 (650W)", "Gabinete": "Gabinete Corsair 4000D Airflow", "Cooler": "Deepcool AG400"} },
     "2": { "id": "2", "name": "Custo-Benefício (Intel)", "description": "Ótima performance em jogos...", "category": "Custo-Benefício", "parts": {"CPU": "Intel Core i5-12400F", "Placa-mãe": "ASRock B660M Steel Legend", "RAM": "Corsair Vengeance 16GB (DDR4)", "GPU": "NVIDIA RTX 3060", "Fonte": "Corsair CV650 (650W)", "Gabinete": "Gabinete Corsair 4000D Airflow", "Cooler": "Deepcool AG400"} },
     "3": { "id": "3", "name": "Top de Linha (AMD)", "description": "Performance extrema para 4K...", "category": "Top de Linha", "parts": {"CPU": "AMD Ryzen 7 7800X3D", "Placa-mãe": "Gigabyte B650M AORUS (AM5)", "RAM": "Kingston Fury 32GB (DDR5)", "GPU": "NVIDIA RTX 4080", "Fonte": "Corsair RM850x (850W)", "Gabinete": "Gabinete Corsair 4000D Airflow", "Cooler": "Water Cooler Corsair H100i"} },
@@ -99,8 +95,9 @@ PREBUILTS = {
 
 
 # -------------------------------------------------------------------
-# 2. ROTAS PARA API (APIs)
+# 4. ROTAS PARA API (APIs)
 # -------------------------------------------------------------------
+# (Rotas de peças continuam iguais)
 @app.route('/api/get-cpus', methods=['GET'])
 def get_cpus(): return jsonify(list(CPUS.values()))
 @app.route('/api/get-motherboards', methods=['GET'])
@@ -118,16 +115,53 @@ def get_cases(): return jsonify(list(CASES.values()))
 @app.route('/api/get-prebuilts', methods=['GET'])
 def get_prebuilts(): return jsonify(list(PREBUILTS.values()))
 
-# Rotas de Assistência
+# --- ROTAS DE ASSISTÊNCIA (AGORA LÊEM DA BASE DE DADOS) ---
 @app.route('/api/get-pc-shops', methods=['GET'])
-def get_pc_shops(): return jsonify([shop for shop in REPAIR_SHOPS.values() if shop['type'] == 'pc'])
+def get_pc_shops():
+    # Procura na tabela 'Loja' por todas as lojas onde type == 'pc'
+    lojas = Loja.query.filter_by(type='pc').all()
+    # Converte os resultados para o formato JSON que o frontend espera
+    lojas_json = [{"id": loja.id, "name": loja.name, "type": loja.type, "address": loja.address, "phone": loja.phone, "lat": loja.lat, "lng": loja.lng} for loja in lojas]
+    return jsonify(lojas_json)
+
 @app.route('/api/get-celular-shops', methods=['GET'])
-def get_celular_shops(): return jsonify([shop for shop in REPAIR_SHOPS.values() if shop['type'] == 'celular'])
+def get_celular_shops():
+    lojas = Loja.query.filter_by(type='celular').all()
+    lojas_json = [{"id": loja.id, "name": loja.name, "type": loja.type, "address": loja.address, "phone": loja.phone, "lat": loja.lat, "lng": loja.lng} for loja in lojas]
+    return jsonify(lojas_json)
+
 @app.route('/api/get-verified-shops', methods=['GET'])
-def get_verified_shops(): return jsonify(list(VERIFIED_SHOPS.values()))
+def get_verified_shops():
+    # Procura lojas que são marcadas como 'is_verified'
+    lojas = Loja.query.filter_by(is_verified=True).all()
+    lojas_json = []
+    for loja in lojas:
+        # Para cada loja, calcula a média das avaliações dos utilizadores
+        avaliacoes = loja.avaliacoes # Pega todas as avaliações ligadas a esta loja
+        if avaliacoes:
+            user_rating_avg = sum([ava.rating for ava in avaliacoes]) / len(avaliacoes)
+            user_rating_count = len(avaliacoes)
+        else:
+            user_rating_avg = None # Nenhuma avaliação ainda
+            user_rating_count = 0
+
+        lojas_json.append({
+            "id": loja.id, 
+            "name": loja.name, 
+            "type": loja.type, 
+            "address": loja.address, 
+            "phone": loja.phone, 
+            "lat": loja.lat, 
+            "lng": loja.lng,
+            "rating": loja.rating, # A tua avaliação de especialista
+            "review": loja.review, # O teu comentário
+            "user_rating_avg": user_rating_avg, # A nova média dos utilizadores
+            "user_rating_count": user_rating_count # Quantos utilizadores avaliaram
+        })
+    return jsonify(lojas_json)
 
 # -------------------------------------------------------------------
-# 3. "MOTOR DE REGRAS" (API)
+# 5. "MOTOR DE REGRAS" (API) - Sem mudanças
 # -------------------------------------------------------------------
 @app.route('/api/check-build', methods=['POST'])
 def check_build():
@@ -167,7 +201,7 @@ def check_build():
     return jsonify(response)
 
 # -------------------------------------------------------------------
-# 4. ROTA PARA CALCULAR CONSUMO (API)
+# 6. ROTA PARA CALCULAR CONSUMO (API) - Sem mudanças
 # -------------------------------------------------------------------
 @app.route('/api/calculate-wattage', methods=['POST'])
 def calculate_wattage():
@@ -184,14 +218,18 @@ def calculate_wattage():
     return jsonify(response)
 
 # -------------------------------------------------------------------
-# 5. ROTA PARA SERVIR O FRONTEND (O index.html)
+# 7. ROTA PARA SERVIR O FRONTEND (O index.html) - Sem mudanças
 # -------------------------------------------------------------------
 @app.route('/')
 def serve_index():
     return render_template('index.html')
 
 # -------------------------------------------------------------------
-# 6. RODA O SERVIDOR (Apenas para testes locais)
+# 8. RODA O SERVIDOR (Apenas para testes locais)
 # -------------------------------------------------------------------
 if __name__ == '__main__':
+    # --- NOVO: Cria as tabelas na base de dados (se não existirem) ---
+    with app.app_context():
+        db.create_all()
+    # --- FIM DA ATUALIZAÇÃO ---
     app.run(debug=True, port=5000)
