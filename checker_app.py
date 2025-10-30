@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, render_template, send_from_directory
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy 
-from sqlalchemy import text, func # Adicionado func para a média
+from sqlalchemy import text # (Não vamos precisar mais disto, mas pode ficar)
 import math 
 import os 
 
@@ -39,8 +39,9 @@ class AvaliacaoUsuario(db.Model):
     loja_id = db.Column(db.Integer, db.ForeignKey('loja.id'), nullable=False)
 
 # -------------------------------------------------------------------
-# 3. DICIONÁRIOS ESTÁTICOS (Peças e Montagens Prontas)
+# 3. "BANCO DE DADOS FALSO" - (Peças e Montagens Prontas)
 # -------------------------------------------------------------------
+# (Os dicionários CPUS, MOTHERBOARDS, RAM_MODULES, GPUS, PSUS, COOLERS, CASES, PREBUILTS continuam aqui)
 CPUS = {
     "1": { "id": "1", "name": "AMD Ryzen 5 5600X", "socket": "AM4", "ram_support_types": ["DDR4"], "tier": 7, "tdp": 65, "image_url": "static/images/amd-ryzen-5-5600x.jpg" },
     "2": { "id": "2", "name": "Intel Core i5-13600K", "socket": "LGA1700", "ram_support_types": ["DDR4", "DDR5"], "tier": 9, "tdp": 125, "image_url": "static/images/intel-i5-13600k.jpg" }
@@ -103,7 +104,7 @@ VERIFIED_SHOPS_DATA = {
 # -------------------------------------------------------------------
 # 4. ROTAS PARA API (APIs)
 # -------------------------------------------------------------------
-# (Rotas de peças continuam iguais)
+# (Rotas de peças)
 @app.route('/api/get-cpus', methods=['GET'])
 def get_cpus(): return jsonify(list(CPUS.values()))
 @app.route('/api/get-motherboards', methods=['GET'])
@@ -121,7 +122,7 @@ def get_cases(): return jsonify(list(CASES.values()))
 @app.route('/api/get-prebuilts', methods=['GET'])
 def get_prebuilts(): return jsonify(list(PREBUILTS.values()))
 
-# --- ROTAS DE ASSISTÊNCIA (AGORA LÊEM DA BASE DE DADOS) ---
+# (Rotas de Assistência lendo do DB)
 @app.route('/api/get-pc-shops', methods=['GET'])
 def get_pc_shops():
     lojas = Loja.query.filter_by(type='pc', is_verified=False).all()
@@ -141,7 +142,6 @@ def get_verified_shops():
     for loja in lojas:
         avaliacoes = loja.avaliacoes
         if avaliacoes:
-            # Pega a média dos utilizadores e a contagem
             user_rating_avg = sum([ava.rating for ava in avaliacoes]) / len(avaliacoes)
             user_rating_count = len(avaliacoes)
         else:
@@ -152,43 +152,12 @@ def get_verified_shops():
             "id": loja.id, "name": loja.name, "type": loja.type, "address": loja.address, "phone": loja.phone, "lat": loja.lat, "lng": loja.lng,
             "rating": loja.rating, "review": loja.review,
             "user_rating_avg": user_rating_avg, 
-            "user_rating_count": user_rating_count
+            "user_rating_count": user_rating_count 
         })
     return jsonify(lojas_json)
 
 # -------------------------------------------------------------------
-# 5. ROTA PARA REGISTAR NOVA AVALIAÇÃO (API)
-# -------------------------------------------------------------------
-@app.route('/api/loja/avaliar', methods=['POST'])
-def submit_rating():
-    data = request.json
-    loja_id = data.get('loja_id')
-    rating_value = data.get('rating')
-
-    if not loja_id or not rating_value or rating_value < 1 or rating_value > 5:
-        return jsonify({"error": "Dados de avaliação inválidos."}), 400
-
-    try:
-        loja = Loja.query.get(loja_id)
-        if not loja:
-            return jsonify({"error": "Loja não encontrada."}), 404
-
-        nova_avaliacao = AvaliacaoUsuario(
-            loja_id=loja_id,
-            rating=rating_value
-        )
-        db.session.add(nova_avaliacao)
-        db.session.commit()
-
-        return jsonify({"success": True, "message": "Avaliação registada com sucesso!"})
-
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": "Erro interno ao registar avaliação."}), 500
-
-
-# -------------------------------------------------------------------
-# 6. ROTA DE VERIFICAÇÃO DE BUILD (API)
+# 5. "MOTOR DE REGRAS" (API)
 # -------------------------------------------------------------------
 @app.route('/api/check-build', methods=['POST'])
 def check_build():
@@ -197,7 +166,6 @@ def check_build():
     bottlenecks = []
     other_warnings = []
     
-    # (Lógica de verificação continua a mesma)
     cpu = CPUS.get(build.get('cpu_id'))
     mobo = MOTHERBOARDS.get(build.get('mobo_id'))
     ram = RAM_MODULES.get(build.get('ram_id'))
@@ -229,7 +197,7 @@ def check_build():
     return jsonify(response)
 
 # -------------------------------------------------------------------
-# 7. ROTA PARA CALCULAR CONSUMO (API)
+# 6. ROTA PARA CALCULAR CONSUMO (API)
 # -------------------------------------------------------------------
 @app.route('/api/calculate-wattage', methods=['POST'])
 def calculate_wattage():
@@ -246,26 +214,29 @@ def calculate_wattage():
     return jsonify(response)
 
 # -------------------------------------------------------------------
-# 8. ROTAS FRONTEND (SERVIÇO)
+# 7. ROTA PARA SERVIR O FRONTEND (O index.html)
 # -------------------------------------------------------------------
 @app.route('/')
 def serve_index():
     return render_template('index.html')
 
-@app.route('/static/<path:filename>')
-def serve_static(filename):
-    return send_from_directory('static', filename)
-
-# --- ROTA TEMPORÁRIA PARA POPULAR A BASE DE DADOS (USADA APENAS UMA VEZ) ---
+# -------------------------------------------------------------------
+# --- ROTA TEMPORÁRIA PARA POPULAR A BASE DE DADOS ---
+# -------------------------------------------------------------------
 @app.route('/api/init-db')
 def init_db():
     try:
+        # --- MUDANÇA AQUI ---
+        # 1. Cria as tabelas (se não existirem) PRIMEIRO
         with app.app_context():
             db.create_all()
         
+        # 2. Apaga todos os dados existentes para evitar duplicados
+        # (Movemos para depois do create_all)
         db.session.query(AvaliacaoUsuario).delete()
         db.session.query(Loja).delete()
         db.session.commit()
+        # --- FIM DA MUDANÇA ---
         
         # Adiciona as Lojas Verificadas
         for id_str, loja_data in VERIFIED_SHOPS_DATA.items():
@@ -297,16 +268,18 @@ def init_db():
             )
             db.session.add(nova_loja)
 
+        # Guarda as alterações na base de dados
         db.session.commit()
         
         return "Base de dados CRIADA e POPULADA com sucesso! 3 lojas verificadas e 9 lojas normais adicionadas."
     
     except Exception as e:
-        db.session.rollback()
+        db.session.rollback() # Desfaz as alterações se der erro
         return f"Ocorreu um erro: {str(e)}"
 
 # -------------------------------------------------------------------
-# 9. RODA O SERVIDOR (Apenas para testes locais)
+# 8. RODA O SERVIDOR (Apenas para testes locais)
 # -------------------------------------------------------------------
 if __name__ == '__main__':
+    # Removemos o db.create_all() daqui
     app.run(debug=True, port=5000)

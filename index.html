@@ -19,13 +19,9 @@
         nav button:hover { background-color: #e9ecef; }
         main { max-width: 700px; margin: 20px auto; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
         .page-section { display: none; }
-
-        /* Estilos da Montagem */
         #page-builder .form-row { margin-bottom: 12px; display: grid; grid-template-columns: 120px 1fr; align-items: center; }
         #page-builder label { font-weight: bold; }
         #page-builder button { padding: 10px; font-size: 16px; margin-top: 15px; width: 100%; cursor: pointer; background-color: #28a745; color: white; border: none; border-radius: 5px; }
-        
-        /* Estilos do Relatório */
         #results { margin-top: 20px; border-top: 2px solid #ccc; padding-top: 10px; }
         #results h4 { margin-top: 20px; margin-bottom: 10px; color: #333; }
         #results p { margin: 4px 0 4px 0; }
@@ -42,68 +38,57 @@
         .shop-card h4 { margin: 0 0 10px 0; color: #007bff; }
         .shop-card p { margin: 5px 0; }
         
-        /* Estilos para Estrelas e Avaliação */
-        .shop-card h4 .stars { color: #f0ad4e; font-size: 14px; margin-left: 8px; }
-        .shop-review { font-style: italic; color: #555; margin-top: 10px !important; padding-top: 10px; border-top: 1px dashed #ccc; }
-        
-        /* --- NOVO: Estilos para o Botão de Votação --- */
-        .rating-controls {
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
+        /* --- NOVO: Estilos para Estrelas e Avaliação --- */
+        .shop-card h4 .stars {
+            color: #f0ad4e; /* Cor de estrela (laranja/amarelo) */
+            font-size: 14px;
+            margin-left: 8px;
         }
-        .rating-controls .rate-label {
-            font-size: 0.9em;
-            color: #6c757d;
-            font-weight: bold;
-        }
-        .rating-controls .rate-star {
-            cursor: pointer;
-            color: #ccc; /* Estrela cinza (vazia) */
-            font-size: 1.2em;
-            transition: color 0.1s;
-        }
-        .rating-controls .rate-star.filled {
-            color: #f0ad4e; /* Estrela preenchida */
-        }
-        .rating-controls .user-avg {
-             font-size: 0.9em;
-             margin-left: 5px;
-             color: #007bff;
+        .shop-review {
+            font-style: italic;
+            color: #555;
+            margin-top: 10px !important;
+            padding-top: 10px;
+            border-top: 1px dashed #ccc;
         }
         /* --- FIM DA ATUALIZAÇÃO --- */
 
-        /* Estilos do Mapa */
-        #shop-map-container {
-            height: 400px;
-            margin: 20px 0;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            z-index: 1; 
-        }
-
-        /* Estilos do Acordeão */
-        .accordion-button {
-            background-color: #eee; color: #444; cursor: pointer; padding: 18px; width: 100%; border: none; text-align: left; outline: none; font-size: 16px; font-weight: bold; transition: background-color 0.3s ease; margin-top: 10px; border-radius: 5px;
-        }
+        .prebuilt-list { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .prebuilt-card { border: 1px solid #17a2b8; padding: 15px; border-radius: 5px; background-color: #f8f9fa; }
+        .prebuilt-card h4 { margin: 0 0 10px 0; color: #17a2b8; }
+        .prebuilt-card p { margin: 5px 0; font-style: italic; }
+        .prebuilt-card ul { margin: 10px 0 0 0; padding-left: 20px; }
+        .prebuilt-card li { font-size: 14px; }
+        .filter-bar { margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
+        .filter-btn { padding: 8px 15px; font-size: 14px; font-weight: bold; border: 2px solid #17a2b8; background-color: #fff; color: #17a2b8; border-radius: 5px; cursor: pointer; transition: all 0.2s ease; }
+        .filter-btn.active, .filter-btn:hover { background-color: #17a2b8; color: #fff; }
+        .card-hidden { display: none; }
+        .visual-select-container { position: relative; }
+        .selected-option-box { border: 1px solid #ced4da; border-radius: 5px; padding: 5px 10px; display: flex; align-items: center; cursor: pointer; background: #fff; min-height: 38px; gap: 10px; }
+        .selected-option-box img { width: 50px; height: auto; object-fit: contain; }
+        .selected-option-box span { font-weight: bold; }
+        .options-list { display: none; position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 1px solid #ced4da; border-top: none; border-radius: 0 0 5px 5px; z-index: 10; max-height: 300px; overflow-y: auto; box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
+        .option-item { display: flex; align-items: center; padding: 10px; cursor: pointer; border-top: 1px solid #f0f2f5; gap: 15px; }
+        .option-item:first-child { border-top: none; }
+        .option-item:hover { background-color: #f0f2f5; }
+        .option-item img { width: 80px; height: auto; object-fit: contain; }
+        .option-item span { font-size: 16px; }
+        .accordion-button { background-color: #eee; color: #444; cursor: pointer; padding: 18px; width: 100%; border: none; text-align: left; outline: none; font-size: 16px; font-weight: bold; transition: background-color 0.3s ease; margin-top: 10px; border-radius: 5px; }
         .accordion-button:hover, .accordion-button.active { background-color: #ddd; }
         .accordion-button.active { border-radius: 5px 5px 0 0; }
         .accordion-panel { padding: 0 18px; background-color: white; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; border-radius: 0 0 5px 5px; border: 1px solid #ddd; border-top: none; }
         .accordion-button.verified { background-color: #d4edda; color: #155724; }
         .accordion-button.verified:hover, .accordion-button.verified.active { background-color: #c3e6cb; }
-
-        /* Outros estilos (Sem Mudanças) */
-        #page-roadmap ul { list-style-type: none; padding-left: 0; }
-        #page-roadmap li { background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 10px; }
-        #page-roadmap li strong { color: #007bff; display: block; font-size: 1.1em; margin-bottom: 5px; }
         #wattage-report { margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ccc; }
         #wattage-report h4 { margin-top: 0; color: #007bff; }
         #share-area { margin-top: 20px; display: flex; gap: 10px; }
         #share-url { flex-grow: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
         #copy-button { padding: 8px 15px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; }
         #copy-button:hover { background-color: #5a6268; }
+        #page-roadmap ul { list-style-type: none; padding-left: 0; }
+        #page-roadmap li { background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 10px; }
+        #page-roadmap li strong { color: #007bff; display: block; font-size: 1.1em; margin-bottom: 5px; }
+        #shop-map-container { height: 400px; margin: 20px 0; border-radius: 8px; border: 1px solid #ccc; z-index: 1; }
     </style>
 </head>
 <body>
@@ -135,15 +120,38 @@
             <div class="form-row"><label>Cooler:</label><div id="cooler-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione um Cooler --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="cooler_id" value=""></div>
             <div class="form-row"><label>RAM:</label><div id="ram-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione uma RAM --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="ram_id" value=""></div>
             <div class="form-row"><label>GPU:</label><div id="gpu-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione uma GPU --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="gpu_id" value=""></div>
-            <div class="form-row"><label>Gabinete:</label><div id="case-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione um Gabinete --</span></span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="case_id" value=""></div>
+            <div class="form-row"><label>Gabinete:</label><div id="case-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione um Gabinete --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="case_id" value=""></div>
             <div class="form-row"><label>Fonte (PSU):</label><div id="psu-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione uma Fonte --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="psu_id" value=""></div>
             <button id="check-button">Verificar Configuração</button>
             <button id="share-button" style="background-color: #17a2b8; margin-top: 10px;">Compartilhar Build</button>
-            <div id="results">...</div>
-            <div id="share-area" style="display: none;">...</div>
+            <div id="results">
+                <h3>Relatório:</h3>
+                <div id="compat-status"></div> 
+                <div id="incompatibilities-section"><h4 style="display: none;">Peças Incompatíveis:</h4><div id="incompatibilities-list" class="report-list"></div></div>
+                <div id="bottlenecks-section"><h4 style="display: none;">Possíveis Gargalos:</h4><div id="bottlenecks-list" class="report-list"></div></div>
+                <div id="other-warnings-section"><h4 style="display: none;">Outros Avisos:</h4><div id="other-warnings-list" class="report-list"></div></div>
+                <div id="wattage-report"></div>
+            </div>
+            <div id="share-area" style="display: none;">
+                <input type="text" id="share-url" readonly title="Link para compartilhar">
+                <button id="copy-button">Copiar</button>
+            </div>
         </section>
         
-        <section id="page-prebuilts" class="page-section">...</section>
+        <section id="page-prebuilts" class="page-section">
+            <h2>Montagens Recomendadas</h2>
+            <p>Selecione uma categoria para filtrar as montagens.</p>
+            <div class="filter-bar">
+                <button class="filter-btn active" data-category="all">Mostrar Todas</button>
+                <button class="filter-btn" data-category="Custo-Benefício">Custo-Benefício</button>
+                <button class="filter-btn" data-category="Top de Linha">Top de Linha</button>
+                <button class="filter-btn" data-category="Opção Média">Opção Média</button>
+                <button class="filter-btn" data-category="Muito Barata">Muito Barata</button>
+            </div>
+            <div id="prebuilts-list" class="prebuilt-list">
+                <p>Carregando montagens...</p>
+            </div>
+        </section>
         
         <section id="page-shops" class="page-section">
             <h2>Encontrar Assistência Técnica</h2>
@@ -169,19 +177,45 @@
             </div>
         </section>
         
-        <section id="page-roadmap" class="page-section">...</section>
+        <section id="page-roadmap" class="page-section">
+            <h2>O Futuro do Site</h2>
+            <p>O nosso MVP (Produto Mínimo Viável) está completo, mas temos grandes planos! Aqui estão as próximas funcionalidades que estamos a planear para construir um site ainda mais robusto e baseado na comunidade:</p>
+            <ul id="roadmap-list">
+                <li>
+                    <strong>Nível 1: Avaliações do Especialista</strong>
+                    (A ideia que discutimos!) Adicionar uma classificação de estrelas (⭐) e uma justificação do porquê confiamos nas "Assistências Verificadas".
+                </li>
+                <li>
+                    <strong>Nível 2: Sistema de Avaliação dos Utilizadores</strong>
+                    Permitir que *vocês* (os utilizadores) deixem uma avaliação em estrelas e um comentário em cada assistência. Isto vai criar uma média de confiança baseada na experiência de todos.
+                </li>
+                <li>
+                    <strong>Nível 3: Busca de Assistências por Proximidade (API do Google)</strong>
+                    Substituir as nossas listas estáticas por uma barra de pesquisa (por CEP ou morada) para encontrar as lojas mais próximas de si, usando a tecnologia do Google Maps.
+                </li>
+                <li>
+                    <strong>Nível 4: Ferramenta de Comparação de Peças</strong>
+                    Uma nova página onde poderá selecionar duas ou mais peças (como duas GPUs ou duas CPUs) e ver as especificações delas lado a lado para ajudar a decidir qual a melhor.
+                </li>
+                <li>
+                    <strong>Nível 5: Assistente de Montagem (Build Wizard)</strong>
+                    Uma ferramenta para iniciantes onde apenas precisa de dizer o seu orçamento (ex: R$ 3000) e o seu objetivo (ex: "Jogos" ou "Estudo"), e o site recomendará uma configuration completa e compatível.
+                </li>
+            </ul>
+        </section>
     </main>
 
 
     <script>
-        const API_BASE_URL = ''; 
+        const API_BASE_URL = ''; // Caminho relativo para funcionar no Render
         const loadedPartsData = {};
+        
         let map = null;
         let markersLayer = null;
         let loadedShopsData = { 'verified': [], 'pc': [], 'celular': [] };
         let mapInitialized = false; 
 
-        // Lógica de Navegação (Sem Mudanças)
+        // Lógica de Navegação
         const navHome = document.getElementById('nav-home');
         const navBuilder = document.getElementById('nav-builder');
         const navPrebuilts = document.getElementById('nav-prebuilts');
@@ -214,7 +248,7 @@
         navShops.addEventListener('click', () => showPage('page-shops'));
         navRoadmap.addEventListener('click', () => showPage('page-roadmap'));
 
-        // Lógica de Carregamento Inicial (Sem Mudanças)
+        // Lógica de Carregamento Inicial
         document.addEventListener('DOMContentLoaded', async () => {
             showPage('page-home');
 
@@ -262,16 +296,19 @@
             } catch (error) { console.error("Erro durante o carregamento inicial:", error); }
         });
         
-        // Funções do Mapa (Sem Mudanças)
+        // Funções do Mapa
         function initMap() {
             if (typeof L === 'undefined') { console.error("Leaflet.js não carregou."); return; }
             if (map) return; 
+            
             map = L.map('shop-map-container').setView([-22.9068, -43.1729], 12);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' }).addTo(map);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
             markersLayer = L.layerGroup().addTo(map);
         }
         function plotShopMarkers(shops) {
-            if (!map || !markersLayer) return; 
+            if (!map || !markersLayer) return;
             markersLayer.clearLayers();
             if (!shops || shops.length === 0) return;
             const bounds = [];
@@ -307,23 +344,12 @@
                     
                     const shopType = shop.type === 'pc' ? 'PC' : 'Celular';
                     
-                    // Lógica para Estrelas do Especialista
+                    // Lógica para Estrelas
                     let ratingHtml = '';
                     if (shop.rating && shop.rating > 0) {
-                        let stars = '⭐'.repeat(shop.rating);
+                        let stars = '⭐'.repeat(shop.rating); // Repete o emoji
                         ratingHtml = `<span class="stars">${stars}</span>`;
                     }
-
-                    // Lógica para Média dos Utilizadores
-                    let userRatingHtml = '';
-                    if (shop.user_rating_avg) {
-                        // Limita a média a 1 casa decimal
-                        const avg = shop.user_rating_avg.toFixed(1);
-                        userRatingHtml = `<p>⭐ Média dos Utilizadores: <strong>${avg}</strong> (${shop.user_rating_count} votos)</p>`;
-                    } else if (shop.rating && shop.is_verified) {
-                        userRatingHtml = `<p>⭐ Média dos Utilizadores: <em>(Seja o primeiro a avaliar!)</em></p>`;
-                    }
-
 
                     // Lógica para Avaliação (Review)
                     let reviewHtml = '';
@@ -331,38 +357,15 @@
                         reviewHtml = `<p class="shop-review"><strong>Avaliação:</strong> "${shop.review}"</p>`;
                     }
                     
-                    // --- NOVO: Adiciona a área de votação ---
-                    let votingControls = '';
-                    // Mostra os controles de votação apenas para lojas verificadas
-                    if (shop.is_verified) {
-                         votingControls = `
-                             <div class="rating-controls">
-                                 <span class="rate-label">Avalie a Loja:</span>
-                                 <span class="rate-star" data-rating="1" data-loja-id="${shop.id}">⭐</span>
-                                 <span class="rate-star" data-rating="2" data-loja-id="${shop.id}">⭐</span>
-                                 <span class="rate-star" data-rating="3" data-loja-id="${shop.id}">⭐</span>
-                                 <span class="rate-star" data-rating="4" data-loja-id="${shop.id}">⭐</span>
-                                 <span class="rate-star" data-rating="5" data-loja-id="${shop.id}">⭐</span>
-                             </div>
-                         `;
-                    }
-                    // --- FIM DA ÁREA DE VOTAÇÃO ---
-
-                    
                     // Monta o HTML do card
                     shopCard.innerHTML = `
                         <h4>${shop.name} <span style="font-size: 12px; color: #6c757d;">(${shopType})</span>${ratingHtml}</h4>
                         <p><strong>Endereço:</strong> ${shop.address}</p>
                         <p><strong>Telefone:</strong> ${shop.phone}</p>
-                        ${userRatingHtml} 
                         ${reviewHtml}
-                        ${votingControls}
                     `;
                     listElement.appendChild(shopCard);
                 });
-                // --- NOVO: Liga a funcionalidade de votação após criar os cards ---
-                setupVotingListeners();
-
             } catch (error) {
                 console.error(`Erro ao popular ${elementId}:`, error);
                 listElement.innerHTML = '<p class="error">Erro ao carregar assistências.</p>';
@@ -370,8 +373,7 @@
         }
         // --- FIM DA ATUALIZAÇÃO ---
 
-
-        // Função populatePrebuiltList (Sem Mudanças)
+        // Função populatePrebuiltList
         async function populatePrebuiltList(apiEndpoint, elementId) {
              const listElement = document.getElementById(elementId);
              if (!listElement) return;
@@ -397,96 +399,189 @@
              }
         }
 
-        // Função setupCategoryFilters (Sem Mudanças)
-        function setupCategoryFilters() { /* ... (código igual) ... */ }
-        
-        // Função setupAccordion (Sem Mudanças)
-        function setupAccordion() { /* ... (código igual) ... */ }
-
-        // Função populateVisualSelector (Sem Mudanças)
-        async function populateVisualSelector(apiEndpoint, containerId, hiddenInputId, placeholderText) { /* ... (código igual) ... */ }
-        
-        // Fecha a lista se clicar fora (Sem Mudanças)
-        document.addEventListener('click', () => { /* ... (código igual) ... */ });
-
-        // Função de Checagem de Build (Sem Mudanças)
-        const checkButton = document.getElementById('check-button');
-        // ... (resto das consts)
-        checkButton.addEventListener('click', async () => { /* ... (código igual) ... */ });
-
-        // Lógica de Compartilhar/Copiar URL (Sem Mudanças)
-        const shareButton = document.getElementById('share-button');
-        // ... (código igual)
-
-
-        // --- NOVO: FUNÇÃO PARA ENVIAR VOTOS E ESTILIZAR ESTRELAS ---
-        function setupVotingListeners() {
-            const starElements = document.querySelectorAll('.rating-controls .rate-star');
-
-            starElements.forEach(star => {
-                // Efeito visual ao passar o mouse
-                star.parentElement.addEventListener('mouseover', (e) => {
-                    let hoverRating = e.target.dataset.rating;
-                    if (!hoverRating) return; // Não faz nada se não for uma estrela
-
-                    let stars = e.target.parentElement.querySelectorAll('.rate-star');
-                    stars.forEach(s => {
-                        // Preenche todas as estrelas até a que o mouse está a tocar
-                        s.classList.toggle('filled', s.dataset.rating <= hoverRating);
+        // Função setupCategoryFilters
+        function setupCategoryFilters() {
+            const filterButtons = document.querySelectorAll('#page-prebuilts .filter-btn');
+            const buildCards = document.querySelectorAll('#page-prebuilts .prebuilt-card');
+             if (!filterButtons.length || !buildCards.length) return;
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    const selectedCategory = button.dataset.category;
+                    buildCards.forEach(card => {
+                        card.classList.toggle('card-hidden', !(selectedCategory === 'all' || card.dataset.category === selectedCategory));
                     });
-                });
-                
-                // Limpa o efeito visual ao tirar o mouse
-                star.parentElement.addEventListener('mouseout', (e) => {
-                    e.currentTarget.querySelectorAll('.rate-star').forEach(s => s.classList.remove('filled'));
-                });
-
-                // Lógica de envio ao clicar
-                star.addEventListener('click', async (e) => {
-                    const ratingValue = parseInt(e.currentTarget.dataset.rating);
-                    const lojaId = e.currentTarget.dataset.lojaId;
-
-                    if (!lojaId || isNaN(ratingValue)) {
-                        alert("Erro: ID da loja ou valor de avaliação inválidos.");
-                        return;
-                    }
-
-                    // Previne votos duplicados (desabilita a votação)
-                    const controls = e.currentTarget.parentElement;
-                    controls.style.opacity = 0.5;
-                    controls.style.pointerEvents = 'none';
-
-                    try {
-                        const response = await fetch(API_BASE_URL + '/api/loja/avaliar', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                loja_id: lojaId,
-                                rating: ratingValue
-                            })
-                        });
-
-                        const result = await response.json();
-
-                        if (response.ok) {
-                            alert(`Obrigado! Sua avaliação de ${ratingValue} estrelas foi registrada.`);
-                            // Recarrega a lista de lojas verificadas para mostrar a nova média
-                            populateShopList('/api/get-verified-shops', 'verified-shops-list', 'verified');
-                        } else {
-                            alert(`Falha ao registrar avaliação: ${result.message || response.statusText}`);
-                        }
-
-                    } catch (error) {
-                        alert("Erro de conexão ao enviar a avaliação.");
-                    } finally {
-                        // Reabilita se o envio falhar por algum motivo
-                        controls.style.opacity = 1;
-                        controls.style.pointerEvents = 'auto';
-                    }
                 });
             });
         }
-        // --- FIM DA NOVA FUNÇÃO ---
+        
+        // Função setupAccordion
+        function setupAccordion() {
+            const buttons = document.querySelectorAll('.accordion-button');
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    buttons.forEach(btn => {
+                        if (btn !== button) {
+                            btn.classList.remove('active');
+                            btn.nextElementSibling.style.maxHeight = null;
+                        }
+                    });
+                    button.classList.toggle('active');
+                    const panel = button.nextElementSibling;
+                    if (panel.style.maxHeight) {
+                        panel.style.maxHeight = null;
+                        markersLayer.clearLayers();
+                    } else {
+                        panel.style.maxHeight = panel.scrollHeight + "px"; 
+                        const listKey = button.dataset.listKey; 
+                        const shopsToPlot = loadedShopsData[listKey];
+                        plotShopMarkers(shopsToPlot);
+                        if(map) {
+                            setTimeout(() => { map.invalidateSize(); }, 310); 
+                        }
+                    } 
+                });
+            });
+        }
+
+        // Função populateVisualSelector
+        async function populateVisualSelector(apiEndpoint, containerId, hiddenInputId, placeholderText) {
+             const container = document.getElementById(containerId);
+             if (!container) { console.error(`Container ${containerId} não encontrado.`); return Promise.reject(new Error(`Container ${containerId} não encontrado.`)); }
+             const selectedBox = container.querySelector('.selected-option-box');
+             const optionsList = container.querySelector('.options-list');
+             const hiddenInput = document.getElementById(hiddenInputId);
+             if (!selectedBox || !optionsList || !hiddenInput) { console.error(`Elementos internos não encontrados para ${containerId}`); return Promise.reject(new Error(`Elementos internos não encontrados para ${containerId}`)); }
+
+             try {
+                const response = await fetch(API_BASE_URL + apiEndpoint);
+                if (!response.ok) throw new Error(`Falha ao buscar ${apiEndpoint}`);
+                const items = await response.json();
+                loadedPartsData[hiddenInputId] = items;
+                optionsList.innerHTML = '';
+                if (!hiddenInput.value) { selectedBox.innerHTML = `<span>${placeholderText}</span>`; }
+
+                selectedBox.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    document.querySelectorAll('.options-list').forEach(list => { if (list !== optionsList) list.style.display = 'none'; });
+                    optionsList.style.display = optionsList.style.display === 'block' ? 'none' : 'block';
+                });
+
+                items.forEach(item => {
+                    const option = document.createElement('div');
+                    option.className = 'option-item';
+                    option.dataset.id = item.id;
+                    option.innerHTML = `<img src="${item.image_url}" alt="${item.name}"><span>${item.name}</span>`;
+                    option.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        selectedBox.innerHTML = `<img src="${item.image_url}" alt="${item.name}"><span>${item.name}</span>`;
+                        hiddenInput.value = item.id;
+                        optionsList.style.display = 'none';
+                    });
+                    optionsList.appendChild(option);
+                });
+
+                 if (hiddenInput.value) {
+                     const selectedItem = items.find(item => item.id === hiddenInput.value);
+                     if (selectedItem) {
+                         selectedBox.innerHTML = `<img src="${selectedItem.image_url}" alt="${selectedItem.name}"><span>${selectedItem.name}</span>`;
+                     } else {
+                        hiddenInput.value = '';
+                        selectedBox.innerHTML = `<span>${placeholderText}</span>`;
+                     }
+                 }
+                 return Promise.resolve();
+
+             } catch (error) {
+                console.error(`Erro ao popular ${containerId}:`, error);
+                selectedBox.innerHTML = `<span>Erro ao carregar</span>`;
+                return Promise.reject(error);
+             }
+        }
+        
+        // Fecha a lista se clicar fora
+        document.addEventListener('click', () => {
+             document.querySelectorAll('.options-list').forEach(list => list.style.display = 'none');
+        });
+
+        // Função de Checagem de Build
+        const checkButton = document.getElementById('check-button');
+        const wattageReportDiv = document.getElementById('wattage-report');
+        const compatStatusDiv = document.getElementById('compat-status');
+        const incompatDiv = document.getElementById('incompatibilities-list');
+        const bottleneckDiv = document.getElementById('bottlenecks-list');
+        const otherWarningsDiv = document.getElementById('other-warnings-list');
+        const incompatSection = document.getElementById('incompatibilities-section');
+        const bottleneckSection = document.getElementById('bottlenecks-section');
+        const otherWarningsSection = document.getElementById('other-warnings-section');
+
+        checkButton.addEventListener('click', async () => {
+            const buildData = {
+                cpu_id: document.getElementById('cpu_id').value, 
+                mobo_id: document.getElementById('mobo_id').value,
+                cooler_id: document.getElementById('cooler_id').value, 
+                ram_id: document.getElementById('ram_id').value,
+                gpu_id: document.getElementById('gpu_id').value, 
+                case_id: document.getElementById('case_id').value,
+                psu_id: document.getElementById('psu_id').value
+            };
+            compatStatusDiv.innerHTML = ''; incompatDiv.innerHTML = ''; bottleneckDiv.innerHTML = ''; otherWarningsDiv.innerHTML = ''; wattageReportDiv.innerHTML = '';
+            incompatSection.querySelector('h4').style.display = 'none'; bottleneckSection.querySelector('h4').style.display = 'none'; otherWarningsSection.querySelector('h4').style.display = 'none';
+
+            try {
+                const compatResponse = await fetch(API_BASE_URL + '/api/check-build', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(buildData) });
+                if (!compatResponse.ok) throw new Error('Erro na checagem de compatibilidade.');
+                const report = await compatResponse.json();
+
+                compatStatusDiv.innerHTML = report.build_is_compatible ? '<p class="success">✅ CONFIGURAÇÃO COMPATÍVEL!</p>' : '<p class="error">❌ CONFIGURAÇÃO INCOMPATÍVEL!</p>';
+                if (!report.build_is_compatible) {
+                    incompatSection.querySelector('h4').style.display = 'block';
+                    report.incompatibilities.forEach(errorMsg => { const div = document.createElement('div'); div.className = 'report-item error-item'; div.textContent = errorMsg; incompatDiv.appendChild(div); });
+                }
+                if (report.bottlenecks.length > 0) {
+                    bottleneckSection.querySelector('h4').style.display = 'block';
+                    report.bottlenecks.forEach(warningMsg => { const div = document.createElement('div'); div.className = 'report-item warning-item'; div.textContent = warningMsg; bottleneckDiv.appendChild(div); });
+                }
+                if (report.other_warnings.length > 0) {
+                    otherWarningsSection.querySelector('h4').style.display = 'block';
+                    report.other_warnings.forEach(warningMsg => { const div = document.createElement('div'); div.className = 'report-item warning-item'; div.textContent = warningMsg; otherWarningsDiv.appendChild(div); });
+                }
+
+                const wattageResponse = await fetch(API_BASE_URL + '/api/calculate-wattage', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(buildData) });
+                if (wattageResponse.ok) {
+                    const wattageData = await wattageResponse.json();
+                    wattageReportDiv.innerHTML = `<h4>Estimativa de Consumo:</h4><p>Consumo estimado: <strong>${wattageData.estimated_wattage}W</strong></p><p style="color: #007bff; font-weight: bold;">Recomendação: Fonte de <strong>${wattageData.recommended_wattage}W</strong> ou superior.</p>`;
+                } else { wattageReportDiv.innerHTML = '<p class="error">Não foi possível calcular o consumo.</p>'; }
+
+            } catch (error) {
+                console.error('Falha na requisição:', error);
+                compatStatusDiv.innerHTML = '<p class="error">Não foi possível verificar. Backend está rodando?</p>';
+            }
+        });
+
+        // Lógica de Compartilhar/Copiar URL
+        const shareButton = document.getElementById('share-button');
+        const shareArea = document.getElementById('share-area');
+        const shareUrlInput = document.getElementById('share-url');
+        const copyButton = document.getElementById('copy-button');
+
+        shareButton.addEventListener('click', () => {
+            const params = [];
+            const partTypes = ['cpu', 'mobo', 'cooler', 'ram', 'gpu', 'case', 'psu'];
+            partTypes.forEach(type => { const value = document.getElementById(`${type}_id`).value; if (value) { params.push(`${type}_id=${encodeURIComponent(value)}`); } });
+            if (params.length > 0) {
+                const queryString = params.join('&');
+                const shareUrl = `${window.location.origin}${window.location.pathname}?${queryString}`;
+                shareUrlInput.value = shareUrl;
+                shareArea.style.display = 'flex';
+            } else { alert("Selecione pelo menos uma peça."); shareArea.style.display = 'none'; }
+        });
+
+        copyButton.addEventListener('click', () => {
+            shareUrlInput.select(); shareUrlInput.setSelectionRange(0, 99999);
+            try { document.execCommand('copy'); alert('Link copiado!'); } catch (err) { alert('Não foi possível copiar.'); }
+        });
     </script>
 
 </body>
