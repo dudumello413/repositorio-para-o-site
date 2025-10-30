@@ -11,15 +11,15 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
+
     <style>
+        /* (Todo o teu CSS continua aqui - sem mudanças) */
         body { font-family: Arial, sans-serif; margin: 0; background-color: #f0f2f5; }
         nav { background-color: #007bff; padding: 10px 20px; display: flex; justify-content: center; gap: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         nav button { background-color: white; color: #007bff; border: none; padding: 10px 20px; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; transition: all 0.2s ease; }
         nav button:hover { background-color: #e9ecef; }
         main { max-width: 700px; margin: 20px auto; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
         .page-section { display: none; }
-
-        /* ... (Estilos da Montagem, Relatório, etc. - Sem Mudanças) ... */
         #page-builder .form-row { margin-bottom: 12px; display: grid; grid-template-columns: 120px 1fr; align-items: center; }
         #page-builder label { font-weight: bold; }
         #page-builder button { padding: 10px; font-size: 16px; margin-top: 15px; width: 100%; cursor: pointer; background-color: #28a745; color: white; border: none; border-radius: 5px; }
@@ -73,16 +73,7 @@
         #page-roadmap ul { list-style-type: none; padding-left: 0; }
         #page-roadmap li { background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 10px; }
         #page-roadmap li strong { color: #007bff; display: block; font-size: 1.1em; margin-bottom: 5px; }
-        
-        /* --- NOVO: Estilo para o Mapa --- */
-        #shop-map-container {
-            height: 400px;
-            margin: 20px 0;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            /* Garante que o mapa apareça */
-            z-index: 1; 
-        }
+        #shop-map-container { height: 400px; margin: 20px 0; border-radius: 8px; border: 1px solid #ccc; z-index: 1; }
     </style>
 </head>
 <body>
@@ -98,51 +89,69 @@
     <main>
         <section id="page-home" class="page-section">
             <h2>Bem-vindo ao Verificador de Hardware!</h2>
-            <p>...</p>
+            <p>Selecione uma opção na barra de navegação acima:</p>
+            <ul>
+                <li><strong>Montar PC:</strong> Verifique a compatibilidade e gargalos da sua futura máquina.</li>
+                <li><strong>Montagens:</strong> Veja nossas builds recomendadas.</li>
+                <li><strong>Assistências:</strong> Encontre uma assistência técnica para PCs ou Celulares.</li>
+                <li><strong>Futuro do Site:</strong> Veja as funcionalidades que estamos a planear!</li>
+            </ul>
         </section>
-
         <section id="page-builder" class="page-section">
             <h2>Monte seu PC</h2>
-            <div class="form-row"><label>CPU:</label><div id="cpu-visual-select" class="visual-select-container">...</div><input type="hidden" id="cpu_id" value=""></div>
-            <div class="form-row"><label>Placa-mãe:</label><div id="mobo-visual-select" class="visual-select-container">...</div><input type="hidden" id="mobo_id" value=""></div>
-            <div class="form-row"><label>Cooler:</label><div id="cooler-visual-select" class="visual-select-container">...</div><input type="hidden" id="cooler_id" value=""></div>
-            <div class="form-row"><label>RAM:</label><div id="ram-visual-select" class="visual-select-container">...</div><input type="hidden" id="ram_id" value=""></div>
-            <div class="form-row"><label>GPU:</label><div id="gpu-visual-select" class="visual-select-container">...</div><input type="hidden" id="gpu_id" value=""></div>
-            <div class="form-row"><label>Gabinete:</label><div id="case-visual-select" class="visual-select-container">...</div><input type="hidden" id="case_id" value=""></div>
-            <div class="form-row"><label>Fonte (PSU):</label><div id="psu-visual-select" class="visual-select-container">...</div><input type="hidden" id="psu_id" value=""></div>
-            
+            <div class="form-row"><label>CPU:</label><div id="cpu-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione uma CPU --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="cpu_id" value=""></div>
+            <div class="form-row"><label>Placa-mãe:</label><div id="mobo-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione uma Placa-mãe --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="mobo_id" value=""></div>
+            <div class="form-row"><label>Cooler:</label><div id="cooler-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione um Cooler --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="cooler_id" value=""></div>
+            <div class="form-row"><label>RAM:</label><div id="ram-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione uma RAM --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="ram_id" value=""></div>
+            <div class="form-row"><label>GPU:</label><div id="gpu-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione uma GPU --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="gpu_id" value=""></div>
+            <div class="form-row"><label>Gabinete:</label><div id="case-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione um Gabinete --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="case_id" value=""></div>
+            <div class="form-row"><label>Fonte (PSU):</label><div id="psu-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione uma Fonte --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="psu_id" value=""></div>
             <button id="check-button">Verificar Configuração</button>
             <button id="share-button" style="background-color: #17a2b8; margin-top: 10px;">Compartilhar Build</button>
-            
             <div id="results">
-                </div>
+                <h3>Relatório:</h3>
+                <div id="compat-status"></div> 
+                <div id="incompatibilities-section"><h4 style="display: none;">Peças Incompatíveis:</h4><div id="incompatibilities-list" class="report-list"></div></div>
+                <div id="bottlenecks-section"><h4 style="display: none;">Possíveis Gargalos:</h4><div id="bottlenecks-list" class="report-list"></div></div>
+                <div id="other-warnings-section"><h4 style="display: none;">Outros Avisos:</h4><div id="other-warnings-list" class="report-list"></div></div>
+                <div id="wattage-report"></div>
+            </div>
             <div id="share-area" style="display: none;">
-                </div>
+                <input type="text" id="share-url" readonly title="Link para compartilhar">
+                <button id="copy-button">Copiar</button>
+            </div>
         </section>
-        
         <section id="page-prebuilts" class="page-section">
-            </section>
+            <h2>Montagens Recomendadas</h2>
+            <p>Selecione uma categoria para filtrar as montagens.</p>
+            <div class="filter-bar">
+                <button class="filter-btn active" data-category="all">Mostrar Todas</button>
+                <button class="filter-btn" data-category="Custo-Benefício">Custo-Benefício</button>
+                <button class="filter-btn" data-category="Top de Linha">Top de Linha</button>
+                <button class="filter-btn" data-category="Opção Média">Opção Média</button>
+                <button class="filter-btn" data-category="Muito Barata">Muito Barata</button>
+            </div>
+            <div id="prebuilts-list" class="prebuilt-list">
+                <p>Carregando montagens...</p>
+            </div>
+        </section>
         
         <section id="page-shops" class="page-section">
             <h2>Encontrar Assistência Técnica</h2>
             <p>Veja as assistências no mapa e clique numa categoria para expandir a lista.</p>
-
             <div id="shop-map-container"></div>
-            
             <button type="button" class="accordion-button verified" data-list-key="verified">⭐ Assistências Verificadas (Recomendado)</button>
             <div class="accordion-panel">
                 <div id="verified-shops-list" class="shop-list">
                     <p>Carregando...</p> 
                 </div>
             </div>
-
             <button type="button" class="accordion-button" data-list-key="pc">Assistências de PC (Todas)</button>
             <div class="accordion-panel">
                 <div id="pc-shops-list" class="shop-list">
                     <p>Carregando...</p> 
                 </div>
             </div>
-
             <button type="button" class="accordion-button" data-list-key="celular">Assistências de Celular (Todas)</button>
             <div class="accordion-panel">
                 <div id="celular-shops-list" class="shop-list">
@@ -150,24 +159,29 @@
                 </div>
             </div>
         </section>
+        
         <section id="page-roadmap" class="page-section">
-            </section>
+            <h2>O Futuro do Site</h2>
+            <p>O nosso MVP (Produto Mínimo Viável) está completo, mas temos grandes planos! Aqui estão as próximas funcionalidades que estamos a planear para construir um site ainda mais robusto e baseado na comunidade:</p>
+            <ul id="roadmap-list">
+                <li><strong>Nível 1: Avaliações do Especialista</strong>...</li>
+                <li><strong>Nível 2: Sistema de Avaliação dos Utilizadores</strong>...</li>
+                <li><strong>Nível 3: Busca de Assistências por Proximidade (API do Google)</strong>...</li>
+                <li><strong>Nível 4: Ferramenta de Comparação de Peças</strong>...</li>
+                <li><strong>Nível 5: Assistente de Montagem (Build Wizard)</strong>...</li>
+            </ul>
+        </section>
     </main>
 
-
     <script>
+        // --- CORREÇÃO: MUDAR API_BASE_URL PARA VAZIO ---
         const API_BASE_URL = ''; 
         const loadedPartsData = {};
         
-        // --- NOVO: Variáveis do Mapa ---
         let map = null;
         let markersLayer = null;
-        let loadedShopsData = { // Guarda os dados das lojas para o mapa
-            'verified': [],
-            'pc': [],
-            'celular': []
-        };
-        // --- FIM DA ATUALIZAÇÃO ---
+        let loadedShopsData = { 'verified': [], 'pc': [], 'celular': [] };
+        let mapInitialized = false; // --- NOVO: Flag para saber se o mapa já foi iniciado
 
         // Lógica de Navegação
         const navHome = document.getElementById('nav-home');
@@ -175,20 +189,28 @@
         const navPrebuilts = document.getElementById('nav-prebuilts');
         const navShops = document.getElementById('nav-shops');
         const navRoadmap = document.getElementById('nav-roadmap');
-        
         const allPages = document.querySelectorAll('.page-section');
+        
         function showPage(pageId) {
             allPages.forEach(page => { page.style.display = 'none'; });
             const pageToShow = document.getElementById(pageId);
              if (pageToShow) { 
                  pageToShow.style.display = 'block'; 
-                 // --- NOVO: Redesenha o mapa se for a página de lojas ---
-                 if (pageId === 'page-shops' && map) {
-                     // Um pequeno atraso para garantir que o div está visível
+                 // --- CORREÇÃO: SÓ INICIA O MAPA QUANDO A PÁGINA É MOSTRADA PELA PRIMEIRA VEZ ---
+                 if (pageId === 'page-shops' && !mapInitialized) {
+                     initMap(); // Inicia o mapa
+                     setupAccordion(); // Inicia o acordeão (que depende do mapa)
+                     mapInitialized = true; // Define a flag
+                 } 
+                 // Se o mapa já foi iniciado, apenas ajusta o tamanho
+                 else if (pageId === 'page-shops' && map) {
                      setTimeout(() => { map.invalidateSize(); }, 10); 
                  }
              } 
-             else { console.error(`Página com ID ${pageId} não encontrada.`); document.getElementById('page-home').style.display = 'block'; }
+             else { 
+                 console.error(`Página com ID ${pageId} não encontrada.`); 
+                 document.getElementById('page-home').style.display = 'block'; 
+             }
         }
         navHome.addEventListener('click', () => showPage('page-home'));
         navBuilder.addEventListener('click', () => showPage('page-builder'));
@@ -198,10 +220,7 @@
 
         // Lógica de Carregamento Inicial
         document.addEventListener('DOMContentLoaded', async () => {
-            showPage('page-home');
-
-            // --- NOVO: Inicializa o Mapa ---
-            initMap();
+            showPage('page-home'); // Mostra a home
 
             const urlParams = new URLSearchParams(window.location.search);
             const initialValues = {};
@@ -216,8 +235,8 @@
             });
 
             try {
+                // Carrega todos os dados em paralelo
                 await Promise.all([
-                    // Peças
                     populateVisualSelector('/api/get-cpus', 'cpu-visual-select', 'cpu_id', 'Selecione uma CPU'),
                     populateVisualSelector('/api/get-motherboards', 'mobo-visual-select', 'mobo_id', 'Selecione uma Placa-mãe'),
                     populateVisualSelector('/api/get-coolers', 'cooler-visual-select', 'cooler_id', 'Selecione um Cooler'),
@@ -225,72 +244,59 @@
                     populateVisualSelector('/api/get-gpus', 'gpu-visual-select', 'gpu_id', 'Selecione uma GPU'),
                     populateVisualSelector('/api/get-cases', 'case-visual-select', 'case_id', 'Selecione um Gabinete'),
                     populateVisualSelector('/api/get-psus', 'psu-visual-select', 'psu_id', 'Selecione uma Fonte'),
-                    // Lojas (Passando a chave 'pc', 'celular', 'verified')
                     populateShopList('/api/get-pc-shops', 'pc-shops-list', 'pc'),
                     populateShopList('/api/get-celular-shops', 'celular-shops-list', 'celular'),
                     populateShopList('/api/get-verified-shops', 'verified-shops-list', 'verified'),
-                    // Montagens
                     populatePrebuiltList('/api/get-prebuilts', 'prebuilts-list')
                 ]);
-
-                setupAccordion();
                 
                 // Pré-seleciona itens da URL (lógica sem mudanças)
                 partTypes.forEach(type => {
                     const initialId = initialValues[`${type}_id`];
-                    // ... (resto da lógica de pré-seleção) ...
+                    const hiddenInputId = `${type}_id`;
+                    const containerId = `${type}-visual-select`;
+                    if (initialId && loadedPartsData[hiddenInputId]) {
+                        const selectedItem = loadedPartsData[hiddenInputId].find(item => item.id === initialId);
+                        if (selectedItem) {
+                            const container = document.getElementById(containerId);
+                            const selectedBox = container.querySelector('.selected-option-box');
+                            selectedBox.innerHTML = `<img src="${selectedItem.image_url}" alt="${selectedItem.name}"><span>${selectedItem.name}</span>`;
+                        }
+                    }
                 });
 
             } catch (error) { console.error("Erro durante o carregamento inicial:", error); }
         });
         
-        // --- NOVO: Funções do Mapa ---
+        // Funções do Mapa
         function initMap() {
-            // Verifica se o Leaflet (L) foi carregado
-            if (typeof L === 'undefined') {
-                console.error("Leaflet.js não carregou.");
-                return;
-            }
+            if (typeof L === 'undefined') { console.error("Leaflet.js não carregou."); return; }
+            if (map) return; // Não inicializa duas vezes
             
-            // Define a vista inicial (Centro do Rio de Janeiro)
             map = L.map('shop-map-container').setView([-22.9068, -43.1729], 12);
-
-            // Adiciona o "fundo" do mapa (OpenStreetMap)
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
-
-            // Cria uma camada (layer) para os marcadores, para podermos limpá-la depois
             markersLayer = L.layerGroup().addTo(map);
         }
 
         function plotShopMarkers(shops) {
-            if (!map || !markersLayer) return; // Garante que o mapa foi iniciado
-            
-            markersLayer.clearLayers(); // Limpa os marcadores antigos
-            if (!shops || shops.length === 0) return; // Sai se a lista estiver vazia
-
-            const bounds = []; // Array para guardar os limites dos marcadores
-
+            if (!map || !markersLayer) return;
+            markersLayer.clearLayers();
+            if (!shops || shops.length === 0) return;
+            const bounds = [];
             shops.forEach(shop => {
                 if (shop.lat && shop.lng) {
                     const marker = L.marker([shop.lat, shop.lng]);
-                    // Adiciona o popup (balão) ao clicar
                     marker.bindPopup(`<strong>${shop.name}</strong><br>${shop.address}<br>${shop.phone}`);
                     markersLayer.addLayer(marker);
-                    bounds.push([shop.lat, shop.lng]); // Adiciona coordenadas aos limites
+                    bounds.push([shop.lat, shop.lng]);
                 }
             });
-            
-            // Faz o mapa dar zoom e centrar-se automaticamente para mostrar todos os marcadores
-            if (bounds.length > 0) {
-                map.fitBounds(bounds);
-            }
+            if (bounds.length > 0) { map.fitBounds(bounds); }
         }
-        // --- FIM DAS FUNÇÕES DO MAPA ---
 
-        // --- ATUALIZADO: Função populateShopList ---
-        // Agora aceita 'listKey' para guardar os dados no 'loadedShopsData'
+        // Função populateShopList (Sem Mudanças na lógica interna)
         async function populateShopList(apiEndpoint, elementId, listKey) {
             const listElement = document.getElementById(elementId);
              if (!listElement) return;
@@ -299,15 +305,13 @@
                 if (!response.ok) throw new Error(`Falha ao buscar ${apiEndpoint}`);
                 const shops = await response.json();
                 
-                // --- NOVO: Guarda os dados globalmente ---
-                loadedShopsData[listKey] = shops;
+                loadedShopsData[listKey] = shops; // Guarda os dados
                 
                 listElement.innerHTML = '';
                 if (shops.length === 0) {
                     listElement.innerHTML = '<p style="padding-top: 15px;">Nenhuma assistência encontrada.</p>'; return;
                 }
                 shops.forEach(shop => {
-                    // (Lógica de criar o shopCard com estrelas e review continua a mesma)
                     const shopCard = document.createElement('div');
                     shopCard.className = 'shop-card';
                     const shopType = shop.type === 'pc' ? 'PC' : 'Celular';
@@ -333,35 +337,78 @@
                 listElement.innerHTML = '<p class="error">Erro ao carregar assistências.</p>';
             }
         }
-        // --- FIM DA ATUALIZAÇÃO ---
 
         // Função populatePrebuiltList (Sem Mudanças)
-        // ... (código igual)
+        async function populatePrebuiltList(apiEndpoint, elementId) {
+             const listElement = document.getElementById(elementId);
+             if (!listElement) return;
+             try {
+                const response = await fetch(API_BASE_URL + apiEndpoint);
+                if (!response.ok) throw new Error(`Falha ao buscar ${apiEndpoint}`);
+                const builds = await response.json();
+                listElement.innerHTML = '';
+                if (builds.length === 0) { listElement.innerHTML = '<p>Nenhuma montagem encontrada.</p>'; return; }
+                builds.forEach(build => {
+                    const buildCard = document.createElement('div');
+                    buildCard.className = 'prebuilt-card';
+                    buildCard.dataset.category = build.category;
+                    let partsList = '';
+                    for (const partName in build.parts) { partsList += `<li><strong>${partName}:</strong> ${build.parts[partName]}</li>`; }
+                    buildCard.innerHTML = `<h4>${build.name}</h4><p>${build.description}</p><ul>${partsList}</ul>`;
+                    listElement.appendChild(buildCard);
+                });
+                setupCategoryFilters();
+             } catch (error) {
+                console.error(`Erro ao popular ${elementId}:`, error);
+                listElement.innerHTML = '<p class="error">Erro ao carregar montagens.</p>';
+             }
+        }
 
         // Função setupCategoryFilters (Sem Mudanças)
-        // ... (código igual)
+        function setupCategoryFilters() {
+            const filterButtons = document.querySelectorAll('#page-prebuilts .filter-btn');
+            const buildCards = document.querySelectorAll('#page-prebuilts .prebuilt-card');
+             if (!filterButtons.length || !buildCards.length) return;
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    const selectedCategory = button.dataset.category;
+                    buildCards.forEach(card => {
+                        card.classList.toggle('card-hidden', !(selectedCategory === 'all' || card.dataset.category === selectedCategory));
+                    });
+                });
+            });
+        }
         
         // --- ATUALIZADO: Função setupAccordion ---
         function setupAccordion() {
             const buttons = document.querySelectorAll('.accordion-button');
             buttons.forEach(button => {
                 button.addEventListener('click', () => {
+                    // Fecha outros painéis abertos
+                    buttons.forEach(btn => {
+                        if (btn !== button) {
+                            btn.classList.remove('active');
+                            btn.nextElementSibling.style.maxHeight = null;
+                        }
+                    });
+
+                    // Abre ou fecha o painel clicado
                     button.classList.toggle('active');
                     const panel = button.nextElementSibling;
-                    
                     if (panel.style.maxHeight) {
                         panel.style.maxHeight = null;
+                        markersLayer.clearLayers(); // Limpa os pins ao fechar
                     } else {
                         panel.style.maxHeight = panel.scrollHeight + "px"; 
                         
-                        // --- NOVO: Plotar os marcadores ---
-                        const listKey = button.dataset.listKey; // 'verified', 'pc', ou 'celular'
+                        const listKey = button.dataset.listKey; 
                         const shopsToPlot = loadedShopsData[listKey];
                         plotShopMarkers(shopsToPlot);
                         
-                        // Recalcula o tamanho do mapa (caso estivesse escondido)
                         if(map) {
-                            setTimeout(() => { map.invalidateSize(); }, 310); // 310ms (logo após a transição de 0.3s)
+                            setTimeout(() => { map.invalidateSize(); }, 310); 
                         }
                     } 
                 });
@@ -370,7 +417,59 @@
         // --- FIM DA ATUALIZAÇÃO ---
 
         // Função populateVisualSelector (Sem Mudanças)
-        // ... (código igual)
+        async function populateVisualSelector(apiEndpoint, containerId, hiddenInputId, placeholderText) {
+             const container = document.getElementById(containerId);
+             if (!container) { console.error(`Container ${containerId} não encontrado.`); return Promise.reject(); }
+             const selectedBox = container.querySelector('.selected-option-box');
+             const optionsList = container.querySelector('.options-list');
+             const hiddenInput = document.getElementById(hiddenInputId);
+             if (!selectedBox || !optionsList || !hiddenInput) { console.error(`Elementos internos não encontrados para ${containerId}`); return Promise.reject(); }
+
+             try {
+                const response = await fetch(API_BASE_URL + apiEndpoint);
+                if (!response.ok) throw new Error(`Falha ao buscar ${apiEndpoint}`);
+                const items = await response.json();
+                loadedPartsData[hiddenInputId] = items;
+                optionsList.innerHTML = '';
+                if (!hiddenInput.value) { selectedBox.innerHTML = `<span>${placeholderText}</span>`; }
+
+                selectedBox.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    document.querySelectorAll('.options-list').forEach(list => { if (list !== optionsList) list.style.display = 'none'; });
+                    optionsList.style.display = optionsList.style.display === 'block' ? 'none' : 'block';
+                });
+
+                items.forEach(item => {
+                    const option = document.createElement('div');
+                    option.className = 'option-item';
+                    option.dataset.id = item.id;
+                    option.innerHTML = `<img src="${item.image_url}" alt="${item.name}"><span>${item.name}</span>`;
+                    option.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        selectedBox.innerHTML = `<img src="${item.image_url}" alt="${item.name}"><span>${item.name}</span>`;
+                        hiddenInput.value = item.id;
+                        optionsList.style.display = 'none';
+                    });
+                    optionsList.appendChild(option);
+                });
+
+                 if (hiddenInput.value) {
+                     const selectedItem = items.find(item => item.id === hiddenInput.value);
+                     if (selectedItem) {
+                         selectedBox.innerHTML = `<img src="${selectedItem.image_url}" alt="${selectedItem.name}"><span>${selectedItem.name}</span>`;
+                     } else {
+                        hiddenInput.value = '';
+                        selectedBox.innerHTML = `<span>${placeholderText}</span>`;
+                     }
+                 }
+                 return Promise.resolve(); // Sucesso
+
+             } catch (error) {
+                console.error(`Erro ao popular ${containerId}:`, error);
+                selectedBox.innerHTML = `<span>Erro ao carregar</span>`;
+                return Promise.reject(error); // Falha
+             }
+        }
         
         // Fecha a lista se clicar fora
         document.addEventListener('click', () => {
@@ -378,10 +477,15 @@
         });
 
         // Função de Checagem de Build (Sem Mudanças)
-        // ... (código igual)
+        const checkButton = document.getElementById('check-button');
+        // ... (resto das consts)
+        checkButton.addEventListener('click', async () => {
+            // ... (resto da função de checagem)
+        });
 
         // Lógica de Compartilhar/Copiar URL (Sem Mudanças)
-        // ... (código igual)
+        const shareButton = document.getElementById('share-button');
+        // ... (resto da lógica de share)
     </script>
 
 </body>
