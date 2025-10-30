@@ -13,7 +13,6 @@
      crossorigin=""></script>
 
     <style>
-        /* (Todo o teu CSS continua aqui - sem mudanças) */
         body { font-family: Arial, sans-serif; margin: 0; background-color: #f0f2f5; }
         nav { background-color: #007bff; padding: 10px 20px; display: flex; justify-content: center; gap: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         nav button { background-color: white; color: #007bff; border: none; padding: 10px 20px; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; transition: all 0.2s ease; }
@@ -97,6 +96,7 @@
                 <li><strong>Futuro do Site:</strong> Veja as funcionalidades que estamos a planear!</li>
             </ul>
         </section>
+
         <section id="page-builder" class="page-section">
             <h2>Monte seu PC</h2>
             <div class="form-row"><label>CPU:</label><div id="cpu-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione uma CPU --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="cpu_id" value=""></div>
@@ -106,8 +106,10 @@
             <div class="form-row"><label>GPU:</label><div id="gpu-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione uma GPU --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="gpu_id" value=""></div>
             <div class="form-row"><label>Gabinete:</label><div id="case-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione um Gabinete --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="case_id" value=""></div>
             <div class="form-row"><label>Fonte (PSU):</label><div id="psu-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione uma Fonte --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="psu_id" value=""></div>
+            
             <button id="check-button">Verificar Configuração</button>
             <button id="share-button" style="background-color: #17a2b8; margin-top: 10px;">Compartilhar Build</button>
+            
             <div id="results">
                 <h3>Relatório:</h3>
                 <div id="compat-status"></div> 
@@ -121,6 +123,7 @@
                 <button id="copy-button">Copiar</button>
             </div>
         </section>
+        
         <section id="page-prebuilts" class="page-section">
             <h2>Montagens Recomendadas</h2>
             <p>Selecione uma categoria para filtrar as montagens.</p>
@@ -164,24 +167,23 @@
             <h2>O Futuro do Site</h2>
             <p>O nosso MVP (Produto Mínimo Viável) está completo, mas temos grandes planos! Aqui estão as próximas funcionalidades que estamos a planear para construir um site ainda mais robusto e baseado na comunidade:</p>
             <ul id="roadmap-list">
-                <li><strong>Nível 1: Avaliações do Especialista</strong>...</li>
-                <li><strong>Nível 2: Sistema de Avaliação dos Utilizadores</strong>...</li>
-                <li><strong>Nível 3: Busca de Assistências por Proximidade (API do Google)</strong>...</li>
-                <li><strong>Nível 4: Ferramenta de Comparação de Peças</strong>...</li>
-                <li><strong>Nível 5: Assistente de Montagem (Build Wizard)</strong>...</li>
+                <li><strong>Nível 1: Avaliações do Especialista</strong> (A ideia que discutimos!) Adicionar uma classificação de estrelas (⭐) e uma justificação do porquê confiamos nas "Assistências Verificadas".</li>
+                <li><strong>Nível 2: Sistema de Avaliação dos Utilizadores</strong> Permitir que *vocês* (os utilizadores) deixem uma avaliação em estrelas e um comentário em cada assistência. Isto vai criar uma média de confiança baseada na experiência de todos.</li>
+                <li><strong>Nível 3: Busca de Assistências por Proximidade (API do Google)</strong> Substituir as nossas listas estáticas por uma barra de pesquisa (por CEP ou morada) para encontrar as lojas mais próximas de si, usando a tecnologia do Google Maps.</li>
+                <li><strong>Nível 4: Ferramenta de Comparação de Peças</strong> Uma nova página onde poderá selecionar duas ou mais peças (como duas GPUs ou duas CPUs) e ver as especificações delas lado a lado para ajudar a decidir qual a melhor.</li>
+                <li><strong>Nível 5: Assistente de Montagem (Build Wizard)</strong> Uma ferramenta para iniciantes onde apenas precisa de dizer o seu orçamento (ex: R$ 3000) e o seu objetivo (ex: "Jogos" ou "Estudo"), e o site recomendará uma configuration completa e compatível.</li>
             </ul>
         </section>
     </main>
 
     <script>
-        // --- CORREÇÃO: MUDAR API_BASE_URL PARA VAZIO ---
         const API_BASE_URL = ''; 
         const loadedPartsData = {};
         
         let map = null;
         let markersLayer = null;
         let loadedShopsData = { 'verified': [], 'pc': [], 'celular': [] };
-        let mapInitialized = false; // --- NOVO: Flag para saber se o mapa já foi iniciado
+        let mapInitialized = false; 
 
         // Lógica de Navegação
         const navHome = document.getElementById('nav-home');
@@ -196,13 +198,11 @@
             const pageToShow = document.getElementById(pageId);
              if (pageToShow) { 
                  pageToShow.style.display = 'block'; 
-                 // --- CORREÇÃO: SÓ INICIA O MAPA QUANDO A PÁGINA É MOSTRADA PELA PRIMEIRA VEZ ---
                  if (pageId === 'page-shops' && !mapInitialized) {
-                     initMap(); // Inicia o mapa
-                     setupAccordion(); // Inicia o acordeão (que depende do mapa)
-                     mapInitialized = true; // Define a flag
+                     initMap();
+                     setupAccordion();
+                     mapInitialized = true;
                  } 
-                 // Se o mapa já foi iniciado, apenas ajusta o tamanho
                  else if (pageId === 'page-shops' && map) {
                      setTimeout(() => { map.invalidateSize(); }, 10); 
                  }
@@ -220,7 +220,7 @@
 
         // Lógica de Carregamento Inicial
         document.addEventListener('DOMContentLoaded', async () => {
-            showPage('page-home'); // Mostra a home
+            showPage('page-home');
 
             const urlParams = new URLSearchParams(window.location.search);
             const initialValues = {};
@@ -235,7 +235,6 @@
             });
 
             try {
-                // Carrega todos os dados em paralelo
                 await Promise.all([
                     populateVisualSelector('/api/get-cpus', 'cpu-visual-select', 'cpu_id', 'Selecione uma CPU'),
                     populateVisualSelector('/api/get-motherboards', 'mobo-visual-select', 'mobo_id', 'Selecione uma Placa-mãe'),
@@ -250,7 +249,6 @@
                     populatePrebuiltList('/api/get-prebuilts', 'prebuilts-list')
                 ]);
                 
-                // Pré-seleciona itens da URL (lógica sem mudanças)
                 partTypes.forEach(type => {
                     const initialId = initialValues[`${type}_id`];
                     const hiddenInputId = `${type}_id`;
@@ -271,7 +269,7 @@
         // Funções do Mapa
         function initMap() {
             if (typeof L === 'undefined') { console.error("Leaflet.js não carregou."); return; }
-            if (map) return; // Não inicializa duas vezes
+            if (map) return; 
             
             map = L.map('shop-map-container').setView([-22.9068, -43.1729], 12);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -279,7 +277,6 @@
             }).addTo(map);
             markersLayer = L.layerGroup().addTo(map);
         }
-
         function plotShopMarkers(shops) {
             if (!map || !markersLayer) return;
             markersLayer.clearLayers();
@@ -296,7 +293,7 @@
             if (bounds.length > 0) { map.fitBounds(bounds); }
         }
 
-        // Função populateShopList (Sem Mudanças na lógica interna)
+        // Função populateShopList
         async function populateShopList(apiEndpoint, elementId, listKey) {
             const listElement = document.getElementById(elementId);
              if (!listElement) return;
@@ -305,7 +302,7 @@
                 if (!response.ok) throw new Error(`Falha ao buscar ${apiEndpoint}`);
                 const shops = await response.json();
                 
-                loadedShopsData[listKey] = shops; // Guarda os dados
+                loadedShopsData[listKey] = shops;
                 
                 listElement.innerHTML = '';
                 if (shops.length === 0) {
@@ -338,7 +335,7 @@
             }
         }
 
-        // Função populatePrebuiltList (Sem Mudanças)
+        // Função populatePrebuiltList
         async function populatePrebuiltList(apiEndpoint, elementId) {
              const listElement = document.getElementById(elementId);
              if (!listElement) return;
@@ -364,7 +361,7 @@
              }
         }
 
-        // Função setupCategoryFilters (Sem Mudanças)
+        // Função setupCategoryFilters
         function setupCategoryFilters() {
             const filterButtons = document.querySelectorAll('#page-prebuilts .filter-btn');
             const buildCards = document.querySelectorAll('#page-prebuilts .prebuilt-card');
@@ -381,32 +378,27 @@
             });
         }
         
-        // --- ATUALIZADO: Função setupAccordion ---
+        // Função setupAccordion
         function setupAccordion() {
             const buttons = document.querySelectorAll('.accordion-button');
             buttons.forEach(button => {
                 button.addEventListener('click', () => {
-                    // Fecha outros painéis abertos
                     buttons.forEach(btn => {
                         if (btn !== button) {
                             btn.classList.remove('active');
                             btn.nextElementSibling.style.maxHeight = null;
                         }
                     });
-
-                    // Abre ou fecha o painel clicado
                     button.classList.toggle('active');
                     const panel = button.nextElementSibling;
                     if (panel.style.maxHeight) {
                         panel.style.maxHeight = null;
-                        markersLayer.clearLayers(); // Limpa os pins ao fechar
+                        markersLayer.clearLayers();
                     } else {
                         panel.style.maxHeight = panel.scrollHeight + "px"; 
-                        
                         const listKey = button.dataset.listKey; 
                         const shopsToPlot = loadedShopsData[listKey];
                         plotShopMarkers(shopsToPlot);
-                        
                         if(map) {
                             setTimeout(() => { map.invalidateSize(); }, 310); 
                         }
@@ -414,16 +406,15 @@
                 });
             });
         }
-        // --- FIM DA ATUALIZAÇÃO ---
 
-        // Função populateVisualSelector (Sem Mudanças)
+        // Função populateVisualSelector
         async function populateVisualSelector(apiEndpoint, containerId, hiddenInputId, placeholderText) {
              const container = document.getElementById(containerId);
-             if (!container) { console.error(`Container ${containerId} não encontrado.`); return Promise.reject(); }
+             if (!container) { console.error(`Container ${containerId} não encontrado.`); return Promise.reject(new Error(`Container ${containerId} não encontrado.`)); }
              const selectedBox = container.querySelector('.selected-option-box');
              const optionsList = container.querySelector('.options-list');
              const hiddenInput = document.getElementById(hiddenInputId);
-             if (!selectedBox || !optionsList || !hiddenInput) { console.error(`Elementos internos não encontrados para ${containerId}`); return Promise.reject(); }
+             if (!selectedBox || !optionsList || !hiddenInput) { console.error(`Elementos internos não encontrados para ${containerId}`); return Promise.reject(new Error(`Elementos internos não encontrados para ${containerId}`)); }
 
              try {
                 const response = await fetch(API_BASE_URL + apiEndpoint);
@@ -462,12 +453,12 @@
                         selectedBox.innerHTML = `<span>${placeholderText}</span>`;
                      }
                  }
-                 return Promise.resolve(); // Sucesso
+                 return Promise.resolve();
 
              } catch (error) {
                 console.error(`Erro ao popular ${containerId}:`, error);
                 selectedBox.innerHTML = `<span>Erro ao carregar</span>`;
-                return Promise.reject(error); // Falha
+                return Promise.reject(error);
              }
         }
         
@@ -476,16 +467,83 @@
              document.querySelectorAll('.options-list').forEach(list => list.style.display = 'none');
         });
 
-        // Função de Checagem de Build (Sem Mudanças)
+        // --- FUNÇÃO DE CHECAGEM DE BUILD (COMPLETA) ---
         const checkButton = document.getElementById('check-button');
-        // ... (resto das consts)
+        const wattageReportDiv = document.getElementById('wattage-report');
+        const compatStatusDiv = document.getElementById('compat-status');
+        const incompatDiv = document.getElementById('incompatibilities-list');
+        const bottleneckDiv = document.getElementById('bottlenecks-list');
+        const otherWarningsDiv = document.getElementById('other-warnings-list');
+        const incompatSection = document.getElementById('incompatibilities-section');
+        const bottleneckSection = document.getElementById('bottlenecks-section');
+        const otherWarningsSection = document.getElementById('other-warnings-section');
+
         checkButton.addEventListener('click', async () => {
-            // ... (resto da função de checagem)
+            const buildData = {
+                cpu_id: document.getElementById('cpu_id').value, 
+                mobo_id: document.getElementById('mobo_id').value,
+                cooler_id: document.getElementById('cooler_id').value, 
+                ram_id: document.getElementById('ram_id').value,
+                gpu_id: document.getElementById('gpu_id').value, 
+                case_id: document.getElementById('case_id').value,
+                psu_id: document.getElementById('psu_id').value
+            };
+            compatStatusDiv.innerHTML = ''; incompatDiv.innerHTML = ''; bottleneckDiv.innerHTML = ''; otherWarningsDiv.innerHTML = ''; wattageReportDiv.innerHTML = '';
+            incompatSection.querySelector('h4').style.display = 'none'; bottleneckSection.querySelector('h4').style.display = 'none'; otherWarningsSection.querySelector('h4').style.display = 'none';
+
+            try {
+                const compatResponse = await fetch(API_BASE_URL + '/api/check-build', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(buildData) });
+                if (!compatResponse.ok) throw new Error('Erro na checagem de compatibilidade.');
+                const report = await compatResponse.json();
+
+                compatStatusDiv.innerHTML = report.build_is_compatible ? '<p class="success">✅ CONFIGURAÇÃO COMPATÍVEL!</p>' : '<p class="error">❌ CONFIGURAÇÃO INCOMPATÍVEL!</p>';
+                if (!report.build_is_compatible) {
+                    incompatSection.querySelector('h4').style.display = 'block';
+                    report.incompatibilities.forEach(errorMsg => { const div = document.createElement('div'); div.className = 'report-item error-item'; div.textContent = errorMsg; incompatDiv.appendChild(div); });
+                }
+                if (report.bottlenecks.length > 0) {
+                    bottleneckSection.querySelector('h4').style.display = 'block';
+                    report.bottlenecks.forEach(warningMsg => { const div = document.createElement('div'); div.className = 'report-item warning-item'; div.textContent = warningMsg; bottleneckDiv.appendChild(div); });
+                }
+                if (report.other_warnings.length > 0) {
+                    otherWarningsSection.querySelector('h4').style.display = 'block';
+                    report.other_warnings.forEach(warningMsg => { const div = document.createElement('div'); div.className = 'report-item warning-item'; div.textContent = warningMsg; otherWarningsDiv.appendChild(div); });
+                }
+
+                const wattageResponse = await fetch(API_BASE_URL + '/api/calculate-wattage', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(buildData) });
+                if (wattageResponse.ok) {
+                    const wattageData = await wattageResponse.json();
+                    wattageReportDiv.innerHTML = `<h4>Estimativa de Consumo:</h4><p>Consumo estimado: <strong>${wattageData.estimated_wattage}W</strong></p><p style="color: #007bff; font-weight: bold;">Recomendação: Fonte de <strong>${wattageData.recommended_wattage}W</strong> ou superior.</p>`;
+                } else { wattageReportDiv.innerHTML = '<p class="error">Não foi possível calcular o consumo.</p>'; }
+
+            } catch (error) {
+                console.error('Falha na requisição:', error);
+                compatStatusDiv.innerHTML = '<p class="error">Não foi possível verificar. Backend está rodando?</p>';
+            }
         });
 
-        // Lógica de Compartilhar/Copiar URL (Sem Mudanças)
+        // Lógica de Compartilhar/Copiar URL
         const shareButton = document.getElementById('share-button');
-        // ... (resto da lógica de share)
+        const shareArea = document.getElementById('share-area');
+        const shareUrlInput = document.getElementById('share-url');
+        const copyButton = document.getElementById('copy-button');
+
+        shareButton.addEventListener('click', () => {
+            const params = [];
+            const partTypes = ['cpu', 'mobo', 'cooler', 'ram', 'gpu', 'case', 'psu'];
+            partTypes.forEach(type => { const value = document.getElementById(`${type}_id`).value; if (value) { params.push(`${type}_id=${encodeURIComponent(value)}`); } });
+            if (params.length > 0) {
+                const queryString = params.join('&');
+                const shareUrl = `${window.location.origin}${window.location.pathname}?${queryString}`;
+                shareUrlInput.value = shareUrl;
+                shareArea.style.display = 'flex';
+            } else { alert("Selecione pelo menos uma peça."); shareArea.style.display = 'none'; }
+        });
+
+        copyButton.addEventListener('click', () => {
+            shareUrlInput.select(); shareUrlInput.setSelectionRange(0, 99999);
+            try { document.execCommand('copy'); alert('Link copiado!'); } catch (err) { alert('Não foi possível copiar.'); }
+        });
     </script>
 
 </body>
