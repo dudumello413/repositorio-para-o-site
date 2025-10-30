@@ -38,8 +38,6 @@ CASES = {
     "601": { "id": "601", "name": "Gabinete Gamer Mancer Goblin", "gpu_max_length_mm": 280, "cooler_max_height_mm": 160, "image_url": "static/images/mancer-goblin.jpg" },
     "602": { "id": "602", "name": "Gabinete Corsair 4000D Airflow", "gpu_max_length_mm": 360, "cooler_max_height_mm": 170, "image_url": "static/images/corsair-4000d-airflow.jpg" }
 }
-
-# --- ATUALIZADO: Lojas com Coordenadas ---
 REPAIR_SHOPS = {
     "1001": { "id": "1001", "name": "ConsertaPC Rápido", "type": "pc", "address": "Rua Fictícia, 123 - Centro", "phone": "(21) 99999-1111", "lat": -22.9068, "lng": -43.1729 },
     "1002": { "id": "1002", "name": "SalvaCelular", "type": "celular", "address": "Av. Principal, 456 - Bairro Novo", "phone": "(21) 98888-2222", "lat": -22.9519, "lng": -43.1822 },
@@ -51,6 +49,8 @@ REPAIR_SHOPS = {
     "1008": { "id": "1008", "name": "SOS Celulares", "type": "celular", "address": "Largo do Machado, 22", "phone": "(21) 92222-3333", "lat": -22.9304, "lng": -43.1788 },
     "1009": { "id": "1009", "name": "Smart Reparo", "type": "celular", "address": "Rua Sete de Setembro, 101", "phone": "(21) 91111-4444", "lat": -22.9048, "lng": -43.1784 }
 }
+
+# --- ATUALIZADO: Lojas Verificadas com "rating" e "review" ---
 VERIFIED_SHOPS = {
     "2001": { 
         "id": "2001", 
@@ -58,9 +58,9 @@ VERIFIED_SHOPS = {
         "type": "pc", 
         "address": "Av. Confiança, 10 - Centro", 
         "phone": "(21) 90000-1111",
-        "rating": 5, 
-        "review": "Preço justo e não tentaram 'empurrar' peças extra.",
-        "lat": -22.9050, "lng": -43.1760 # <-- NOVO
+        "lat": -22.9050, "lng": -43.1760,
+        "rating": 5, # <-- NOVO
+        "review": "Preço justo e não tentaram 'empurrar' peças extra." # <-- NOVO
     },
     "2002": { 
         "id": "2002", 
@@ -68,9 +68,9 @@ VERIFIED_SHOPS = {
         "type": "celular", 
         "address": "Rua da Garantia, 20 - Lapa", 
         "phone": "(21) 90000-2222",
-        "rating": 4, 
-        "review": "Serviço rápido, mas um pouco mais caro. O problema foi resolvido.",
-        "lat": -22.9135, "lng": -43.1800 # <-- NOVO
+        "lat": -22.9135, "lng": -43.1800,
+        "rating": 4, # <-- NOVO
+        "review": "Serviço rápido, mas um pouco mais caro. O problema foi resolvido." # <-- NOVO
     },
     "2003": { 
         "id": "2003", 
@@ -78,9 +78,9 @@ VERIFIED_SHOPS = {
         "type": "pc", 
         "address": "Rua do Técnico, 30", 
         "phone": "(21) 90000-3333",
-        "rating": 5, 
-        "review": "Especialista em PCs, muito confiável.",
-        "lat": -22.9080, "lng": -43.1810 # <-- NOVO
+        "lat": -22.9080, "lng": -43.1810,
+        "rating": 5, # <-- NOVO
+        "review": "Especialista em PCs, muito confiável." # <-- NOVO
     }
 }
 # --- FIM DA ATUALIZAÇÃO ---
@@ -96,6 +96,7 @@ PREBUILTS = {
     "7": { "id": "7", "name": "Muito Barata (AMD)", "description": "Para jogos leves sem GPU dedicada.", "category": "Muito Barata", "parts": {"CPU": "AMD Ryzen 5 5600G (Gráficos Integrados)", "Placa-mãe": "ASUS Prime A520M", "RAM": "Corsair Vengeance 16GB (DDR4)", "GPU": "Gráficos Integrados Radeon Vega 7", "Fonte": "Fonte Mancer 500W", "Gabinete": "Gabinete Mancer Goblin", "Cooler": "Cooler Box Original AMD"} },
     "8": { "id": "8", "name": "Muito Barata (Intel)", "description": "Ponto de entrada para jogos.", "category": "Muito Barata", "parts": {"CPU": "Intel Core i3-12100F", "Placa-mãe": "Gigabyte H610M", "RAM": "Corsair Vengeance 16GB (DDR4)", "GPU": "NVIDIA GeForce GTX 1660 Super", "Fonte": "Fonte Mancer 500W", "Gabinete": "Gabinete Mancer Goblin", "Cooler": "Cooler Box Original Intel"} }
 }
+
 
 # -------------------------------------------------------------------
 # 2. ROTAS PARA API (APIs)
@@ -134,7 +135,7 @@ def check_build():
     incompatibilities = []
     bottlenecks = []
     other_warnings = []
-    # (Toda a lógica de verificação está aqui, sem mudanças)
+    
     cpu = CPUS.get(build.get('cpu_id'))
     mobo = MOTHERBOARDS.get(build.get('mobo_id'))
     ram = RAM_MODULES.get(build.get('ram_id'))
@@ -142,6 +143,7 @@ def check_build():
     psu = PSUS.get(build.get('psu_id'))
     cooler = COOLERS.get(build.get('cooler_id'))
     case = CASES.get(build.get('case_id'))
+
     if cpu and mobo:
         if cpu['socket'] != mobo['socket']: incompatibilities.append(f"INCOMPATÍVEL: A CPU {cpu['name']} (soquete {cpu['socket']}) não é compatível com a placa-mãe {mobo['name']} (soquete {mobo['socket']}).")
     if ram and mobo:

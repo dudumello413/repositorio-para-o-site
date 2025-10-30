@@ -31,12 +31,28 @@
         .warning-item { border-color: #ffeeba; background-color: #fff3cd; color: #856404; }
         .success { color: green; font-weight: bold; font-size: 18px; }
         .error { color: red; font-weight: bold; font-size: 18px; }
+
+        /* Estilos da Seção de Assistência */
         .shop-list { display: grid; grid-template-columns: 1fr; gap: 15px; padding-top: 15px; }
         .shop-card { border: 1px solid #ccc; padding: 15px; border-radius: 5px; background-color: #f9f9f9; }
         .shop-card h4 { margin: 0 0 10px 0; color: #007bff; }
         .shop-card p { margin: 5px 0; }
-        .shop-card h4 .stars { color: #f0ad4e; font-size: 14px; margin-left: 8px; }
-        .shop-review { font-style: italic; color: #555; margin-top: 10px !important; padding-top: 10px; border-top: 1px dashed #ccc; }
+        
+        /* --- NOVO: Estilos para Estrelas e Avaliação --- */
+        .shop-card h4 .stars {
+            color: #f0ad4e; /* Cor de estrela (laranja/amarelo) */
+            font-size: 14px;
+            margin-left: 8px;
+        }
+        .shop-review {
+            font-style: italic;
+            color: #555;
+            margin-top: 10px !important;
+            padding-top: 10px;
+            border-top: 1px dashed #ccc;
+        }
+        /* --- FIM DA ATUALIZAÇÃO --- */
+
         .prebuilt-list { display: grid; grid-template-columns: 1fr; gap: 15px; }
         .prebuilt-card { border: 1px solid #17a2b8; padding: 15px; border-radius: 5px; background-color: #f8f9fa; }
         .prebuilt-card h4 { margin: 0 0 10px 0; color: #17a2b8; }
@@ -106,10 +122,8 @@
             <div class="form-row"><label>GPU:</label><div id="gpu-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione uma GPU --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="gpu_id" value=""></div>
             <div class="form-row"><label>Gabinete:</label><div id="case-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione um Gabinete --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="case_id" value=""></div>
             <div class="form-row"><label>Fonte (PSU):</label><div id="psu-visual-select" class="visual-select-container"><div class="selected-option-box"><span>-- Selecione uma Fonte --</span></div><div class="options-list"><p style="padding: 10px;">Carregando...</p></div></div><input type="hidden" id="psu_id" value=""></div>
-            
             <button id="check-button">Verificar Configuração</button>
             <button id="share-button" style="background-color: #17a2b8; margin-top: 10px;">Compartilhar Build</button>
-            
             <div id="results">
                 <h3>Relatório:</h3>
                 <div id="compat-status"></div> 
@@ -167,17 +181,33 @@
             <h2>O Futuro do Site</h2>
             <p>O nosso MVP (Produto Mínimo Viável) está completo, mas temos grandes planos! Aqui estão as próximas funcionalidades que estamos a planear para construir um site ainda mais robusto e baseado na comunidade:</p>
             <ul id="roadmap-list">
-                <li><strong>Nível 1: Avaliações do Especialista</strong> Adicionar uma classificação de estrelas (⭐) e uma justificação do porquê confiamos nas "Assistências Verificadas".</li>
-                <li><strong>Nível 2: Sistema de Avaliação dos Utilizadores</strong> Permitir que *vocês* (os utilizadores) deixem uma avaliação em estrelas e um comentário em cada assistência. Isto vai criar uma média de confiança baseada na experiência de todos.</li>
-                <li><strong>Nível 3: Busca de Assistências por Proximidade (API do Google)</strong> Substituir as nossas listas estáticas por uma barra de pesquisa (por CEP ou morada) para encontrar as lojas mais próximas de si, usando a tecnologia do Google Maps.</li>
-                <li><strong>Nível 4: Ferramenta de Comparação de Peças</strong> Uma nova página onde poderá selecionar duas ou mais peças (como duas GPUs ou duas CPUs) e ver as especificações delas lado a lado para ajudar a decidir qual a melhor.</li>
-                <li><strong>Nível 5: Assistente de Montagem (Build Wizard)</strong> Uma ferramenta para iniciantes onde apenas precisa de dizer o seu orçamento (ex: R$ 3000) e o seu objetivo (ex: "Jogos" ou "Estudo"), e o site recomendará uma configuration completa e compatível.</li>
+                <li>
+                    <strong>Nível 1: Avaliações do Especialista</strong>
+                    (A ideia que discutimos!) Adicionar uma classificação de estrelas (⭐) e uma justificação do porquê confiamos nas "Assistências Verificadas".
+                </li>
+                <li>
+                    <strong>Nível 2: Sistema de Avaliação dos Utilizadores</strong>
+                    Permitir que *vocês* (os utilizadores) deixem uma avaliação em estrelas e um comentário em cada assistência. Isto vai criar uma média de confiança baseada na experiência de todos.
+                </li>
+                <li>
+                    <strong>Nível 3: Busca de Assistências por Proximidade (API do Google)</strong>
+                    Substituir as nossas listas estáticas por uma barra de pesquisa (por CEP ou morada) para encontrar as lojas mais próximas de si, usando a tecnologia do Google Maps.
+                </li>
+                <li>
+                    <strong>Nível 4: Ferramenta de Comparação de Peças</strong>
+                    Uma nova página onde poderá selecionar duas ou mais peças (como duas GPUs ou duas CPUs) e ver as especificações delas lado a lado para ajudar a decidir qual a melhor.
+                </li>
+                <li>
+                    <strong>Nível 5: Assistente de Montagem (Build Wizard)</strong>
+                    Uma ferramenta para iniciantes onde apenas precisa de dizer o seu orçamento (ex: R$ 3000) e o seu objetivo (ex: "Jogos" ou "Estudo"), e o site recomendará uma configuration completa e compatível.
+                </li>
             </ul>
         </section>
     </main>
 
+
     <script>
-        const API_BASE_URL = ''; 
+        const API_BASE_URL = ''; // Caminho relativo para funcionar no Render
         const loadedPartsData = {};
         
         let map = null;
@@ -293,7 +323,7 @@
             if (bounds.length > 0) { map.fitBounds(bounds); }
         }
 
-        // Função populateShopList
+        // --- ATUALIZADO: Função populateShopList ---
         async function populateShopList(apiEndpoint, elementId, listKey) {
             const listElement = document.getElementById(elementId);
              if (!listElement) return;
@@ -311,16 +341,23 @@
                 shops.forEach(shop => {
                     const shopCard = document.createElement('div');
                     shopCard.className = 'shop-card';
+                    
                     const shopType = shop.type === 'pc' ? 'PC' : 'Celular';
+                    
+                    // Lógica para Estrelas
                     let ratingHtml = '';
                     if (shop.rating && shop.rating > 0) {
-                        let stars = '⭐'.repeat(shop.rating);
+                        let stars = '⭐'.repeat(shop.rating); // Repete o emoji
                         ratingHtml = `<span class="stars">${stars}</span>`;
                     }
+
+                    // Lógica para Avaliação (Review)
                     let reviewHtml = '';
                     if (shop.review) {
                         reviewHtml = `<p class="shop-review"><strong>Avaliação:</strong> "${shop.review}"</p>`;
                     }
+                    
+                    // Monta o HTML do card
                     shopCard.innerHTML = `
                         <h4>${shop.name} <span style="font-size: 12px; color: #6c757d;">(${shopType})</span>${ratingHtml}</h4>
                         <p><strong>Endereço:</strong> ${shop.address}</p>
@@ -334,6 +371,7 @@
                 listElement.innerHTML = '<p class="error">Erro ao carregar assistências.</p>';
             }
         }
+        // --- FIM DA ATUALIZAÇÃO ---
 
         // Função populatePrebuiltList
         async function populatePrebuiltList(apiEndpoint, elementId) {
@@ -467,7 +505,7 @@
              document.querySelectorAll('.options-list').forEach(list => list.style.display = 'none');
         });
 
-        // --- FUNÇÃO DE CHECAGEM DE BUILD (COMPLETA) ---
+        // Função de Checagem de Build
         const checkButton = document.getElementById('check-button');
         const wattageReportDiv = document.getElementById('wattage-report');
         const compatStatusDiv = document.getElementById('compat-status');
