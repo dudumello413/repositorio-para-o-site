@@ -38,19 +38,19 @@ CASES = {
     "601": { "id": "601", "name": "Gabinete Gamer Mancer Goblin", "gpu_max_length_mm": 280, "cooler_max_height_mm": 160, "image_url": "static/images/mancer-goblin.jpg" },
     "602": { "id": "602", "name": "Gabinete Corsair 4000D Airflow", "gpu_max_length_mm": 360, "cooler_max_height_mm": 170, "image_url": "static/images/corsair-4000d-airflow.jpg" }
 }
-REPAIR_SHOPS = {
-    "1001": { "id": "1001", "name": "ConsertaPC Rápido", "type": "pc", "address": "Rua Fictícia, 123 - Centro", "phone": "(21) 99999-1111" },
-    "1002": { "id": "1002", "name": "SalvaCelular", "type": "celular", "address": "Av. Principal, 456 - Bairro Novo", "phone": "(21) 98888-2222" },
-    "1003": { "id": "1003", "name": "Dr. Computador & Cia", "type": "pc", "address": "Praça da Tecnologia, 789", "phone": "(21) 97777-3333" },
-    "1004": { "id": "1004", "name": "Rei do Smartphone", "type": "celular", "address": "Rua Fictícia, 130 - Centro", "phone": "(21) 96666-4444" },
-    "1005": { "id": "1005", "name": "PC-Help Soluções", "type": "pc", "address": "Av. Principal, 999 - Bairro Novo", "phone": "(21) 95555-5555" },
-    "1006": { "id": "1006", "name": "Help Informática", "type": "pc", "address": "Rua da Passagem, 50 - Loja B", "phone": "(21) 94444-1111" },
-    "1007": { "id": "1007", "name": "Solução Notebook", "type": "pc", "address": "Travessa dos Tamoios, 15", "phone": "(21) 93333-2222" },
-    "1008": { "id": "1008", "name": "SOS Celulares", "type": "celular", "address": "Largo do Machado, 22", "phone": "(21) 92222-3333" },
-    "1009": { "id": "1009", "name": "Smart Reparo", "type": "celular", "address": "Rua Sete de Setembro, 101", "phone": "(21) 91111-4444" }
-}
 
-# --- ATUALIZADO: Lojas Verificadas com "rating" e "review" ---
+# --- ATUALIZADO: Lojas com Coordenadas ---
+REPAIR_SHOPS = {
+    "1001": { "id": "1001", "name": "ConsertaPC Rápido", "type": "pc", "address": "Rua Fictícia, 123 - Centro", "phone": "(21) 99999-1111", "lat": -22.9068, "lng": -43.1729 },
+    "1002": { "id": "1002", "name": "SalvaCelular", "type": "celular", "address": "Av. Principal, 456 - Bairro Novo", "phone": "(21) 98888-2222", "lat": -22.9519, "lng": -43.1822 },
+    "1003": { "id": "1003", "name": "Dr. Computador & Cia", "type": "pc", "address": "Praça da Tecnologia, 789", "phone": "(21) 97777-3333", "lat": -22.9035, "lng": -43.1795 },
+    "1004": { "id": "1004", "name": "Rei do Smartphone", "type": "celular", "address": "Rua Fictícia, 130 - Centro", "phone": "(21) 96666-4444", "lat": -22.9075, "lng": -43.1740 },
+    "1005": { "id": "1005", "name": "PC-Help Soluções", "type": "pc", "address": "Av. Principal, 999 - Bairro Novo", "phone": "(21) 95555-5555", "lat": -22.9530, "lng": -43.1830 },
+    "1006": { "id": "1006", "name": "Help Informática", "type": "pc", "address": "Rua da Passagem, 50 - Loja B", "phone": "(21) 94444-1111", "lat": -22.9497, "lng": -43.1818 },
+    "1007": { "id": "1007", "name": "Solução Notebook", "type": "pc", "address": "Travessa dos Tamoios, 15", "phone": "(21) 93333-2222", "lat": -22.9320, "lng": -43.1799 },
+    "1008": { "id": "1008", "name": "SOS Celulares", "type": "celular", "address": "Largo do Machado, 22", "phone": "(21) 92222-3333", "lat": -22.9304, "lng": -43.1788 },
+    "1009": { "id": "1009", "name": "Smart Reparo", "type": "celular", "address": "Rua Sete de Setembro, 101", "phone": "(21) 91111-4444", "lat": -22.9048, "lng": -43.1784 }
+}
 VERIFIED_SHOPS = {
     "2001": { 
         "id": "2001", 
@@ -58,8 +58,9 @@ VERIFIED_SHOPS = {
         "type": "pc", 
         "address": "Av. Confiança, 10 - Centro", 
         "phone": "(21) 90000-1111",
-        "rating": 5, # <-- NOVO
-        "review": "Preço justo e não tentaram 'empurrar' peças extra." # <-- NOVO
+        "rating": 5, 
+        "review": "Preço justo e não tentaram 'empurrar' peças extra.",
+        "lat": -22.9050, "lng": -43.1760 # <-- NOVO
     },
     "2002": { 
         "id": "2002", 
@@ -67,8 +68,9 @@ VERIFIED_SHOPS = {
         "type": "celular", 
         "address": "Rua da Garantia, 20 - Lapa", 
         "phone": "(21) 90000-2222",
-        "rating": 4, # <-- NOVO
-        "review": "Serviço rápido, mas um pouco mais caro. O problema foi resolvido." # <-- NOVO
+        "rating": 4, 
+        "review": "Serviço rápido, mas um pouco mais caro. O problema foi resolvido.",
+        "lat": -22.9135, "lng": -43.1800 # <-- NOVO
     },
     "2003": { 
         "id": "2003", 
@@ -76,8 +78,9 @@ VERIFIED_SHOPS = {
         "type": "pc", 
         "address": "Rua do Técnico, 30", 
         "phone": "(21) 90000-3333",
-        "rating": 5, # <-- NOVO
-        "review": "Especialista em PCs, muito confiável." # <-- NOVO
+        "rating": 5, 
+        "review": "Especialista em PCs, muito confiável.",
+        "lat": -22.9080, "lng": -43.1810 # <-- NOVO
     }
 }
 # --- FIM DA ATUALIZAÇÃO ---
@@ -131,7 +134,7 @@ def check_build():
     incompatibilities = []
     bottlenecks = []
     other_warnings = []
-
+    # (Toda a lógica de verificação está aqui, sem mudanças)
     cpu = CPUS.get(build.get('cpu_id'))
     mobo = MOTHERBOARDS.get(build.get('mobo_id'))
     ram = RAM_MODULES.get(build.get('ram_id'))
@@ -139,8 +142,6 @@ def check_build():
     psu = PSUS.get(build.get('psu_id'))
     cooler = COOLERS.get(build.get('cooler_id'))
     case = CASES.get(build.get('case_id'))
-
-    # (Lógica de compatibilidade, gargalo e física completa)
     if cpu and mobo:
         if cpu['socket'] != mobo['socket']: incompatibilities.append(f"INCOMPATÍVEL: A CPU {cpu['name']} (soquete {cpu['socket']}) não é compatível com a placa-mãe {mobo['name']} (soquete {mobo['socket']}).")
     if ram and mobo:
